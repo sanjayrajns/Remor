@@ -165,6 +165,7 @@ export default function LandingPage({ onLaunchApp }) {
 
           {/* Main Headline with Sharp Inline Badge */}
           <h1
+            className="landing-hero-title"
             style={{
               fontFamily: 'var(--font-heading)',
               fontSize: '76px',
@@ -199,6 +200,7 @@ export default function LandingPage({ onLaunchApp }) {
 
           {/* Subtitle */}
           <p
+            className="landing-hero-subtitle"
             style={{
               fontSize: '18px',
               lineHeight: 1.65,
@@ -212,7 +214,7 @@ export default function LandingPage({ onLaunchApp }) {
           </p>
 
           {/* CTA Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '64px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '64px', flexWrap: 'wrap' }}>
             <button className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '15px' }} onClick={handleLaunch}>
               Open Workspace <ArrowRight size={16} />
             </button>
@@ -227,6 +229,7 @@ export default function LandingPage({ onLaunchApp }) {
 
           {/* Technical Mockup Frame */}
           <div
+            className="landing-mockup-frame"
             style={{
               width: '100%',
               background: 'var(--surface)',
@@ -250,7 +253,7 @@ export default function LandingPage({ onLaunchApp }) {
             </div>
 
             {/* Interactive Preview Cards Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <div className="landing-grid-3" style={{ gap: '16px' }}>
               {/* Card 1: Link */}
               <div style={{ background: '#fff', border: '1px solid var(--border)', borderTop: '3px solid var(--primary)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -300,16 +303,8 @@ export default function LandingPage({ onLaunchApp }) {
       </section>
 
       {/* ── Section: Philosophy (01 / 02 / 03) ───────────────────── */}
-      <section
-        id="philosophy"
-        style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '80px 40px',
-          borderBottom: '1px solid var(--border)',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px' }}>
+      <section id="philosophy" className="landing-section">
+        <div className="landing-flex-header">
           <div>
             <span className="font-mono text-xs text-blue font-600" style={{ letterSpacing: '0.08em', display: 'block', marginBottom: '8px' }}>
               DESIGN PHILOSOPHY
@@ -323,7 +318,7 @@ export default function LandingPage({ onLaunchApp }) {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+        <div className="landing-grid-3">
           {/* Pillar 1 */}
           <div style={{ border: '1px solid var(--border)', padding: '32px', background: 'var(--surface)' }}>
             <span className="font-mono text-xl font-700 text-blue" style={{ display: 'block', marginBottom: '16px' }}>01</span>
@@ -354,15 +349,7 @@ export default function LandingPage({ onLaunchApp }) {
       </section>
 
       {/* ── Section: Interactive Demo Playground ────────────────── */}
-      <section
-        id="demo"
-        style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '80px 40px',
-          borderBottom: '1px solid var(--border)',
-        }}
-      >
+      <section id="demo" className="landing-section">
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border-strong)', padding: '40px' }}>
           <div style={{ marginBottom: '24px' }}>
             <span className="font-mono text-xs text-blue font-600" style={{ letterSpacing: '0.08em', display: 'block', marginBottom: '8px' }}>
@@ -420,15 +407,7 @@ export default function LandingPage({ onLaunchApp }) {
       </section>
 
       {/* ── Section: Deep Capabilities & Feature Grid ──────────── */}
-      <section
-        id="features"
-        style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '80px 40px',
-          borderBottom: '1px solid var(--border)',
-        }}
-      >
+      <section id="features" className="landing-section">
         <div style={{ marginBottom: '48px' }}>
           <span className="font-mono text-xs text-blue font-600" style={{ letterSpacing: '0.08em', display: 'block', marginBottom: '8px' }}>
             CORE CAPABILITIES
@@ -438,7 +417,7 @@ export default function LandingPage({ onLaunchApp }) {
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
+        <div className="landing-grid-2">
           {/* Feature 1 */}
           <div style={{ border: '1px solid var(--border)', padding: '32px', background: '#fff' }}>
             <div style={{ width: '40px', height: '40px', background: 'var(--primary-subtle)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
@@ -490,15 +469,7 @@ export default function LandingPage({ onLaunchApp }) {
       </section>
 
       {/* ── Section: Dedicated Encryption & Security Vault ───────── */}
-      <section
-        id="security"
-        style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '80px 40px',
-          borderBottom: '1px solid var(--border)',
-        }}
-      >
+      <section id="security" className="landing-section">
         <div style={{ background: '#0B1015', border: '1px solid #1F2937', padding: '48px', color: '#fff', position: 'relative', overflow: 'hidden' }}>
           {/* Subtle grid background */}
           <div
@@ -559,16 +530,8 @@ export default function LandingPage({ onLaunchApp }) {
       </section>
 
       {/* ── Section: Performance Specs ───────────────────────────── */}
-      <section
-        id="architecture"
-        style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '80px 40px',
-          borderBottom: '1px solid var(--border)',
-        }}
-      >
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', textAlign: 'center' }}>
+      <section id="architecture" className="landing-section">
+        <div className="landing-grid-4">
           <div style={{ padding: '24px', border: '1px solid var(--border)', background: 'var(--surface)' }}>
             <div style={{ fontFamily: 'var(--font-heading)', fontSize: '48px', fontWeight: 700, color: 'var(--primary)' }}>&lt; 5ms</div>
             <div className="font-mono text-xs text-muted" style={{ marginTop: '8px' }}>SEARCH INDEX LATENCY</div>
@@ -615,18 +578,18 @@ export default function LandingPage({ onLaunchApp }) {
         style={{
           borderTop: '1px solid var(--border)',
           background: 'var(--surface)',
-          padding: '40px',
+          padding: '40px 16px',
           fontSize: '12px',
           color: 'var(--text-muted)',
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="landing-footer-inner">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{ width: '24px', height: '20px', padding: '0 4px', background: '#0B1015', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '11px' }}>Re</div>
             <span className="font-heading font-600 text-primary">Remor Systems</span>
             <span>© 2026. All rights reserved.</span>
           </div>
-          <div className="font-mono text-xs" style={{ display: 'flex', gap: '24px' }}>
+          <div className="font-mono text-xs" style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
             <span>DM Sans • Space Grotesk • DM Mono</span>
             <span>0px Sharp Corner Standard</span>
           </div>
