@@ -529,7 +529,7 @@ export default function LandingPage({ onLaunchApp }) {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#E5E7EB' }}>
                   <CheckCircle2 size={16} color="#34D399" />
-                  <span><strong>Encrypted SSL Transit:</strong> TLS 1.3 encrypted sync to Neon PostgreSQL cloud servers.</span>
+                  <span><strong>Encrypted SSL Transit:</strong> TLS 1.3 encrypted sync to secure cloud servers.</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#E5E7EB' }}>
                   <CheckCircle2 size={16} color="#34D399" />
@@ -547,7 +547,7 @@ export default function LandingPage({ onLaunchApp }) {
               <div style={{ color: '#6B7280', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div><span style={{ color: '#9CA3AF' }}>[CYPHER]</span> payload = enc_aes256_gcm(content, master_key)</div>
                 <div><span style={{ color: '#9CA3AF' }}>[HASH]</span> sha256_signature = 8f9b2c...a14e9e</div>
-                <div><span style={{ color: '#9CA3AF' }}>[DB_SYNC]</span> Neon SSL Stream initialized</div>
+                <div><span style={{ color: '#9CA3AF' }}>[DB_SYNC]</span> Encrypted SSL Stream initialized</div>
                 <div><span style={{ color: '#9CA3AF' }}>[AUTH]</span> Google OAuth 2.0 Session verified</div>
               </div>
               <div style={{ marginTop: '20px', padding: '10px', background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.2)', color: '#34D399', textAlign: 'center', fontWeight: 600 }}>

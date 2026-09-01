@@ -18,7 +18,7 @@ const FEATURES = [
   },
   {
     icon: <ShieldCheck size={14} />,
-    label: 'Neon DB & Trusted Auth',
+    label: 'Cloud Sync & Trusted Auth',
     detail: 'SSL encrypted sync with Google OAuth & Better Auth',
     highlight: '#A78BFA',
   },
@@ -283,7 +283,7 @@ export default function LoginPage() {
             letterSpacing: '0.08em',
           }}
         >
-          BACKED BY NEON POSTGRESQL · GOOGLE OAUTH
+          BACKED BY ENCRYPTED CLOUD · GOOGLE OAUTH
         </div>
       </div>
 
@@ -603,7 +603,7 @@ export default function LoginPage() {
               letterSpacing: '0.04em',
             }}
           >
-            Your data is stored securely in Neon PostgreSQL.
+            Your data is stored securely with end-to-end encryption.
           </div>
         </div>
       </div>

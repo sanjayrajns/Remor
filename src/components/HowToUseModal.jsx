@@ -59,7 +59,7 @@ const STEPS = [
     fieldsExample: {
       editorFeatures: 'Checklists • Code Snippets • Quote Callouts',
       swatches: 'Sky Blue • Sage Green • Warm Beige • Blush Pink • Violet',
-      autoSave: 'Real-time sync to Neon PostgreSQL database',
+      autoSave: 'Real-time sync to encrypted cloud database',
       metrics: 'Live word counts & reading time estimates',
     },
     proTip: 'Select any text inside the editor to reveal the inline formatting toolbar.',
