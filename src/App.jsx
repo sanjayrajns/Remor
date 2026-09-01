@@ -33,7 +33,7 @@ function ProtectedRoute({ children }) {
         background: 'var(--bg)', flexDirection: 'column', gap: '16px',
       }}>
         <div style={{
-          width: '28px', height: '26px', padding: '0 4px', background: 'var(--primary)',
+          width: '28px', height: '26px', padding: '0 4px', background: '#0B1015',
           color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontWeight: 700, fontSize: '13px', fontFamily: 'var(--font-heading)',
           animation: 'pulse 1.5s ease-in-out infinite',
@@ -173,7 +173,7 @@ function ProductWorkspace() {
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-              <div style={{ width: '22px', height: '20px', padding: '0 3px', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '10px', borderRadius: '3px' }}>Re</div>
+              <div style={{ width: '22px', height: '20px', padding: '0 3px', background: '#0B1015', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '10px', borderRadius: '3px' }}>Re</div>
               <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '15px', letterSpacing: '-0.3px', color: 'var(--text-primary)' }}>{getActiveViewTitle()}</span>
             </div>
           </div>

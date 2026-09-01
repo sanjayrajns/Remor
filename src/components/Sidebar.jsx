@@ -98,7 +98,7 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
                 width: '28px',
                 height: '26px',
                 padding: '0 4px',
-                background: 'var(--primary)',
+                background: '#0B1015',
                 color: '#fff',
                 display: 'flex',
                 alignItems: 'center',

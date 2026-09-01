@@ -183,8 +183,8 @@ export default function LoginPage() {
             style={{
               width: '32px',
               height: '32px',
-              background: 'rgba(255,255,255,0.18)',
-              border: '1px solid rgba(255,255,255,0.25)',
+              background: '#0B1015',
+              border: '1px solid rgba(255,255,255,0.15)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -192,6 +192,7 @@ export default function LoginPage() {
               fontSize: '14px',
               color: '#fff',
               fontFamily: 'var(--font-heading)',
+              borderRadius: '4px',
             }}
           >
             Re

@@ -150,7 +150,7 @@ export default function HowToUseModal({ isOpen, onClose }) {
                 width: '26px',
                 height: '24px',
                 padding: '0 4px',
-                background: 'var(--primary)',
+                background: '#0B1015',
                 color: '#fff',
                 display: 'flex',
                 alignItems: 'center',

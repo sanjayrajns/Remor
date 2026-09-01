@@ -70,7 +70,7 @@ export default function LandingPage({ onLaunchApp }) {
               width: '30px',
               height: '28px',
               padding: '0 4px',
-              background: 'var(--primary)',
+              background: '#0B1015',
               color: '#fff',
               display: 'flex',
               alignItems: 'center',
@@ -622,7 +622,7 @@ export default function LandingPage({ onLaunchApp }) {
       >
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '24px', height: '20px', padding: '0 4px', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '11px' }}>Re</div>
+            <div style={{ width: '24px', height: '20px', padding: '0 4px', background: '#0B1015', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '11px' }}>Re</div>
             <span className="font-heading font-600 text-primary">Remor Systems</span>
             <span>© 2026. All rights reserved.</span>
           </div>
