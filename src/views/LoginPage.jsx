@@ -63,9 +63,10 @@ export default function LoginPage() {
     setError('');
     setGoogleLoading(true);
     try {
+      const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/app` : '/app';
       await signIn.social({
         provider: 'google',
-        callbackURL: 'http://localhost:5173/app',
+        callbackURL,
       });
     } catch (err) {
       setError(err.message || 'Google Sign-In failed');
