@@ -1,0 +1,189 @@
+/* ─────────────────────────────────────────────────────────────
+   BRAINLY NOTE EDITOR — TipTap prose styles
+   Matches the sharp, editorial, DM Sans / Space Grotesk system
+   ───────────────────────────────────────────────────────────── */
+
+/* Focus ring removal from editor wrapper */
+.brainly-editor:focus {
+  outline: none;
+}
+
+/* ── Typography ─────────────────────────────────────────────── */
+.brainly-editor {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-primary);
+  min-height: 320px;
+}
+
+.brainly-editor > * + * {
+  margin-top: 0.85em;
+}
+
+/* Headings */
+.brainly-editor h1 {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  margin-top: 1.5em;
+  margin-bottom: 0.4em;
+}
+
+.brainly-editor h2 {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-top: 1.4em;
+  margin-bottom: 0.35em;
+}
+
+.brainly-editor h3 {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 1.2em;
+  margin-bottom: 0.3em;
+}
+
+/* Paragraphs */
+.brainly-editor p {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+/* Bold / Italic / Strike */
+.brainly-editor strong { font-weight: 600; }
+.brainly-editor em     { font-style: italic; }
+.brainly-editor s      { text-decoration: line-through; color: var(--text-muted); }
+.brainly-editor u      { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Inline code */
+.brainly-editor code {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  color: var(--primary);
+}
+
+/* Code block */
+.brainly-editor pre {
+  background: var(--text-primary);
+  color: #E2E8F0;
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin: 1.2em 0;
+}
+
+.brainly-editor pre code {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+}
+
+/* Blockquote */
+.brainly-editor blockquote {
+  border-left: 3px solid var(--primary);
+  margin: 1.2em 0;
+  padding: 4px 0 4px 20px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Horizontal Rule */
+.brainly-editor hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.8em 0;
+}
+
+/* Lists */
+.brainly-editor ul {
+  padding-left: 1.4em;
+  list-style-type: disc;
+}
+
+.brainly-editor ol {
+  padding-left: 1.4em;
+  list-style-type: decimal;
+}
+
+.brainly-editor li {
+  margin: 0.25em 0;
+  color: var(--text-primary);
+}
+
+.brainly-editor li::marker {
+  color: var(--primary);
+}
+
+/* Task list */
+.brainly-editor ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.brainly-editor ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.brainly-editor ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.brainly-editor ul[data-type="taskList"] li input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.brainly-editor ul[data-type="taskList"] li[data-checked="true"] > div {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Highlight marks */
+.brainly-editor mark {
+  border-radius: 0;
+  padding: 1px 3px;
+}
+
+/* ── Placeholder ─────────────────────────────────────────────── */
+.brainly-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--text-muted);
+  pointer-events: none;
+  float: left;
+  height: 0;
+  font-style: normal;
+}
+
+.is-editor-empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-muted);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+/* ── Selection ───────────────────────────────────────────────── */
+.brainly-editor ::selection {
+  background: var(--primary-subtle);
+}
