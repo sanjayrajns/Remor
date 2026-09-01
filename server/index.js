@@ -29,7 +29,7 @@ const pool = new Pool({
 const getAuthBaseUrl = () => {
   if (process.env.BETTER_AUTH_URL) return process.env.BETTER_AUTH_URL;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return 'http://localhost:3001';
+  return 'https://remor.vercel.app';
 };
 
 const auth = betterAuth({
@@ -38,6 +38,7 @@ const auth = betterAuth({
   baseURL: getAuthBaseUrl(),
   basePath: '/api/auth',
   trustedOrigins: [
+    'https://remor.vercel.app',
     'http://localhost:5173',
     'http://localhost:3001',
     process.env.BETTER_AUTH_URL,
