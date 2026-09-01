@@ -26,12 +26,23 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+const getAuthBaseUrl = () => {
+  if (process.env.BETTER_AUTH_URL) return process.env.BETTER_AUTH_URL;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return 'http://localhost:3001';
+};
+
 const auth = betterAuth({
   database: pool,
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3001',
+  baseURL: getAuthBaseUrl(),
   basePath: '/api/auth',
-  trustedOrigins: ['http://localhost:5173'],
+  trustedOrigins: [
+    'http://localhost:5173',
+    'http://localhost:3001',
+    process.env.BETTER_AUTH_URL,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+  ].filter(Boolean),
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
@@ -44,7 +55,7 @@ const auth = betterAuth({
   },
   advanced: {
     cookieSameSite: 'lax',
-    cookieSecure: false, // Set to true in production with HTTPS
+    cookieSecure: process.env.NODE_ENV === 'production',
     crossSubDomainCookies: {
       enabled: false,
     },
@@ -53,7 +64,7 @@ const auth = betterAuth({
 
 // ── Middleware ───────────────────────────────────────────────
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: true,
   credentials: true,
 }));
 
