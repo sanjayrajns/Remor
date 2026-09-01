@@ -72,7 +72,7 @@ app.use(cors({
 app.use(express.json());
 
 // ── Auth routes (Better Auth handler) ────────────────────────
-app.all('/api/auth/*splat', toNodeHandler(auth));
+app.use('/api/auth', toNodeHandler(auth));
 
 // ── Session verification middleware ─────────────────────────
 async function requireAuth(req, res, next) {
