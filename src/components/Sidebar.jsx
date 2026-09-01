@@ -88,6 +88,7 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
           alignItems: 'center',
           justifyContent: sidebarCollapsed ? 'center' : 'space-between',
           borderBottom: '1px solid var(--border)',
+          flexShrink: 0,
         }}
       >
         {!sidebarCollapsed && (
@@ -104,6 +105,7 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
                 justifyContent: 'center',
                 fontWeight: 700,
                 fontSize: '13px',
+                borderRadius: '4px',
               }}
             >
               Re
@@ -127,7 +129,8 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
             <button
               className="btn-icon"
               onClick={onCloseMobile}
-              title="Close drawer"
+              title="Close menu"
+              style={{ width: '32px', height: '32px', borderRadius: '6px' }}
             >
               <X size={18} />
             </button>
