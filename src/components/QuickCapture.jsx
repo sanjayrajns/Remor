@@ -63,6 +63,7 @@ export default function QuickCapture({ isOpen, onClose }) {
     e.preventDefault();
     if (!title.trim()) return;
 
+    const now = new Date().toISOString();
     const id = addItem({
       title: title.trim(),
       content: content.trim(),
@@ -73,6 +74,8 @@ export default function QuickCapture({ isOpen, onClose }) {
       tags,
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
       status: 'inbox',
+      createdAt: now,
+      updatedAt: now,
     });
 
     onClose();

@@ -116,6 +116,7 @@ export async function getItemsByUser(userId) {
 }
 
 export async function createItem(userId, item) {
+  const now = new Date().toISOString();
   const {
     id, type, title, content, url, tags, collectionId,
     status, priority, starred, reminder, dueDate,
@@ -132,7 +133,7 @@ export async function createItem(userId, item) {
       ${JSON.stringify(tags || [])}, ${collectionId || null},
       ${status}, ${priority}, ${starred || false},
       ${reminder || null}, ${dueDate || null},
-      ${createdAt}, ${updatedAt}, ${viewedAt || null},
+      ${createdAt || now}, ${updatedAt || now}, ${viewedAt || null},
       ${viewCount || 0}, ${JSON.stringify(aiTags || [])}, ${notes || ''}
     )
     RETURNING *

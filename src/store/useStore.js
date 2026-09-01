@@ -115,14 +115,14 @@ const useStore = create((set, get) => ({
       starred: false,
       reminder: null,
       dueDate: null,
-      createdAt: now,
-      updatedAt: now,
       viewedAt: null,
       viewCount: 0,
       aiTags: [],
       similarIds: [],
       notes: '',
       ...data,
+      createdAt: data.createdAt || now,
+      updatedAt: data.updatedAt || now,
     };
 
     // Optimistic update
@@ -143,16 +143,19 @@ const useStore = create((set, get) => ({
   },
 
   updateItem: async (id, data) => {
+    const now = new Date().toISOString();
+    const updatePayload = { ...data, updatedAt: now };
+
     // Optimistic update
     set(s => ({
       items: s.items.map(i => i.id === id
-        ? { ...i, ...data, updatedAt: new Date().toISOString() }
+        ? { ...i, ...updatePayload }
         : i
       )
     }));
 
     try {
-      await apiFetch(`/items/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+      await apiFetch(`/items/${id}`, { method: 'PUT', body: JSON.stringify(updatePayload) });
     } catch (err) {
       console.error('[store] updateItem failed:', err);
     }
