@@ -587,80 +587,6 @@ kbd {
     background: var(--surface-active);
   }
 
-  /* ── Mobile Bottom Tab Dock ─────────────────────────────── */
-  .mobile-bottom-dock {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    height: 58px;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: var(--bg);
-    border-top: 1px solid var(--border);
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-    box-shadow: 0 -1px 0 var(--border), 0 -8px 24px rgba(0,0,0,0.05);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    background: rgba(255,255,255,0.95);
-  }
-
-  .mobile-bottom-dock-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    font-size: 10px;
-    font-family: var(--font-sans);
-    font-weight: 500;
-    color: var(--text-muted);
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: color 120ms ease, background 120ms ease;
-    min-width: 52px;
-    letter-spacing: 0.01em;
-  }
-  .mobile-bottom-dock-btn:active {
-    background: var(--surface-hover);
-    transform: scale(0.95);
-  }
-  .mobile-bottom-dock-btn.active {
-    color: var(--primary);
-    font-weight: 600;
-  }
-  .mobile-bottom-dock-btn.active svg {
-    stroke: var(--primary);
-  }
-
-  /* Center capture FAB */
-  .mobile-capture-fab {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 14px rgba(5,98,239,0.4);
-    transition: transform 150ms ease, box-shadow 150ms ease;
-    font-size: 22px;
-    font-weight: 300;
-    line-height: 1;
-    margin-bottom: 2px;
-    border: none;
-    cursor: pointer;
-  }
-  .mobile-capture-fab:active {
-    transform: scale(0.92);
-    box-shadow: 0 2px 8px rgba(5,98,239,0.3);
-  }
-
   /* ── Notion Slide-out Mobile Sidebar Drawer ─────────────── */
   .mobile-sidebar-backdrop {
     position: fixed;
@@ -705,9 +631,9 @@ kbd {
     min-height: 100%;
   }
 
-  /* ── Main content scroll with bottom dock clearance ──────── */
+  /* ── Main content area full height clearance ──────── */
   main {
-    padding-bottom: calc(58px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: 0 !important;
   }
 
   /* ── View content adjustments ────────────────────────────── */

@@ -85,7 +85,7 @@ export default function LandingPage({ onLaunchApp }) {
           <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '20px', letterSpacing: '-0.5px' }}>
             Remor
           </span>
-          <span className="font-mono text-xs text-muted" style={{ marginLeft: '8px', borderLeft: '1px solid var(--border)', paddingLeft: '10px' }}>
+          <span className="font-mono text-xs text-muted mobile-hide" style={{ marginLeft: '8px', borderLeft: '1px solid var(--border)', paddingLeft: '10px' }}>
             v1.0.0
           </span>
         </div>
@@ -246,7 +246,7 @@ export default function LandingPage({ onLaunchApp }) {
                 <div style={{ width: '10px', height: '10px', background: '#10B981' }} />
                 <span className="font-mono text-xs text-muted" style={{ marginLeft: '12px' }}>brainly://workspace/inbox</span>
               </div>
-              <div className="font-mono text-xs text-muted" style={{ display: 'flex', gap: '16px' }}>
+              <div className="font-mono text-xs text-muted mobile-hide" style={{ display: 'flex', gap: '16px' }}>
                 <span>CTRL+K Quick Capture</span>
                 <span>CTRL+P Command Palette</span>
               </div>
