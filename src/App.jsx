@@ -89,23 +89,50 @@ function ProductWorkspace() {
     }
   }, [location.pathname]);
 
-  // Global Keyboard Shortcuts
+  // Global Keyboard Shortcuts (Capture phase for 100% reliable input override)
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+      const isCmdOrCtrl = isMac ? (e.metaKey || e.ctrlKey) : (e.ctrlKey || e.metaKey);
+
+      const key = (e.key || '').toLowerCase();
+      const code = (e.code || '').toLowerCase();
+
+      // Ctrl+K / Cmd+K -> Quick Capture
+      if (isCmdOrCtrl && (key === 'k' || code === 'keyk')) {
         e.preventDefault();
+        e.stopPropagation();
         setIsQuickCaptureOpen((prev) => !prev);
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+        return;
+      }
+
+      // Ctrl+P / Cmd+P -> Command Palette (overrides browser print dialog)
+      if (isCmdOrCtrl && (key === 'p' || code === 'keyp')) {
         e.preventDefault();
+        e.stopPropagation();
         setIsCommandPaletteOpen((prev) => !prev);
-      } else if (e.key === 'Escape') {
-        if (activeNoteId) closeNote();
-        else if (activeItemId) setActiveItem(null);
+        return;
+      }
+
+      // Escape -> Close open modals or note/detail drawers
+      if (key === 'escape' || code === 'escape') {
+        if (isQuickCaptureOpen) {
+          setIsQuickCaptureOpen(false);
+        } else if (isCommandPaletteOpen) {
+          setIsCommandPaletteOpen(false);
+        } else if (isHowToUseOpen) {
+          setIsHowToUseOpen(false);
+        } else if (activeNoteId) {
+          closeNote();
+        } else if (activeItemId) {
+          setActiveItem(null);
+        }
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeItemId, activeNoteId, setActiveItem, closeNote]);
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [activeItemId, activeNoteId, isQuickCaptureOpen, isCommandPaletteOpen, isHowToUseOpen, setActiveItem, closeNote]);
 
   const getActiveViewTitle = () => {
     if (activeView.startsWith('col-')) return 'Collection';
