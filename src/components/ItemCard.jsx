@@ -408,8 +408,12 @@ export default function ItemCard({ item }) {
                 {format(new Date(item.dueDate), 'MMM d')}
               </span>
             ) : (
-              <span className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
-                {formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}
+              <span
+                className="font-mono"
+                style={{ fontSize: '10px', color: 'var(--text-muted)' }}
+                title={item.createdAt ? format(new Date(item.createdAt), 'EEEE, MMMM d, yyyy · h:mm a') : ''}
+              >
+                {item.createdAt ? format(new Date(item.createdAt), 'MMM d, h:mm a') : 'Just now'}
               </span>
             )}
             {collection && (
