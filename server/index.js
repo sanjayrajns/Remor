@@ -27,8 +27,13 @@ const pool = new Pool({
 });
 
 const getAuthBaseUrl = () => {
-  if (process.env.BETTER_AUTH_URL) return process.env.BETTER_AUTH_URL;
-  return 'https://remor.vercel.app';
+  if (process.env.BETTER_AUTH_URL && !process.env.BETTER_AUTH_URL.includes('localhost')) {
+    return process.env.BETTER_AUTH_URL;
+  }
+  if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+    return 'https://remor.vercel.app';
+  }
+  return 'http://localhost:3001';
 };
 
 const auth = betterAuth({
@@ -51,6 +56,7 @@ const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      redirectURI: `${getAuthBaseUrl()}/api/auth/callback/google`,
     },
   },
   advanced: {
