@@ -1,36 +1,430 @@
 /* ─────────────────────────────────────────────────────────────
-   BRAINLY NOTE EDITOR — TipTap prose styles
-   Matches the sharp, editorial, DM Sans / Space Grotesk system
+   BRAINLY NOTE EDITOR — Premium TipTap prose + UI styles
    ───────────────────────────────────────────────────────────── */
 
-/* Focus ring removal from editor wrapper */
-.brainly-editor:focus {
-  outline: none;
+/* ── Root layout ─────────────────────────────────────────────── */
+.note-editor-root {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* ── Typography ─────────────────────────────────────────────── */
+/* ── Top Nav Bar ──────────────────────────────────────────────── */
+.note-topbar {
+  height: 52px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.note-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 120ms ease, background 120ms ease;
+}
+.note-back-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.note-breadcrumb-root  { font-size: 11px; color: var(--text-muted); }
+.note-breadcrumb-arrow { color: var(--border-strong); font-size: 11px; }
+.note-breadcrumb-title {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.note-autosave { font-size: 11px; color: var(--text-muted); }
+
+/* ── Toolbar ──────────────────────────────────────────────────── */
+.note-toolbar {
+  min-height: 46px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 2px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.note-toolbar::-webkit-scrollbar { display: none; }
+
+/* ── Toolbar Button ───────────────────────────────────────────── */
+.tbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 100ms ease, color 100ms ease, border-color 100ms ease, transform 60ms ease;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+.tbar-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+.tbar-btn:active {
+  transform: scale(0.92);
+}
+.tbar-btn--active {
+  background: var(--primary-subtle) !important;
+  color: var(--primary) !important;
+  border-color: var(--primary-subtle-hover) !important;
+}
+
+/* ── Toolbar Separator ────────────────────────────────────────── */
+.tbar-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+
+/* ── Drop Button ──────────────────────────────────────────────── */
+.tbar-drop {
+  min-width: 44px;
+  padding: 0 6px;
+}
+
+/* ── Drop Panel ───────────────────────────────────────────────── */
+.drop-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 1000;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 220px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.1);
+  animation: dropIn 120ms ease;
+}
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.drop-panel-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+
+.drop-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 100ms ease, color 100ms ease;
+}
+.drop-close:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.drop-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Color Grid ───────────────────────────────────────────────── */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+}
+
+.color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: transparent;
+  transition: background 100ms ease, border-color 100ms ease;
+  font-family: var(--font-sans);
+}
+.color-swatch:hover {
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+.color-swatch:active { transform: scale(0.96); }
+
+.color-swatch-letter {
+  font-size: 14px;
+  font-weight: 700;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.color-swatch-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ── Highlight Swatches ───────────────────────────────────────── */
+.highlight-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.highlight-swatch {
+  border-radius: 6px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 8px;
+  cursor: pointer;
+  transition: opacity 100ms ease, transform 100ms ease;
+}
+.highlight-swatch:hover { opacity: 0.85; transform: scale(1.03); }
+.highlight-none {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* ── Slash hint ───────────────────────────────────────────────── */
+.slash-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+.slash-hint kbd {
+  display: inline-block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+/* ── Slash Command Popup ──────────────────────────────────────── */
+.slash-popup {
+  position: absolute;
+  z-index: 9999;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 256px;
+  max-width: 310px;
+  max-height: 340px;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.1);
+  animation: dropIn 120ms ease;
+  scrollbar-width: thin;
+}
+
+.slash-popup-header {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.02em;
+}
+.slash-popup-header kbd {
+  display: inline-block;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 3px;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  margin: 0 1px;
+}
+
+.slash-group-label {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 8px 12px 4px;
+}
+
+.slash-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 80ms ease;
+}
+.slash-item:hover,
+.slash-item--selected {
+  background: var(--primary-subtle);
+}
+
+.slash-item-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--primary);
+  background: var(--primary-subtle);
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
+.slash-item-label {
+  flex: 1;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.slash-item-cmd {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* ── Scroll area ──────────────────────────────────────────────── */
+.note-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 0 80px;
+  scrollbar-width: thin;
+}
+
+.note-content-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 40px 0;
+}
+
+/* ── Title input ──────────────────────────────────────────────── */
+.note-title-input {
+  width: 100%;
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-primary);
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0;
+  margin-bottom: 12px;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+}
+.note-title-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ── Meta row ─────────────────────────────────────────────────── */
+.note-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TIPTAP PROSE STYLES
+   ───────────────────────────────────────────────────────────── */
+
+.brainly-editor:focus { outline: none; }
+
 .brainly-editor {
   font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 15px;
-  line-height: 1.75;
+  line-height: 1.8;
   color: var(--text-primary);
   min-height: 320px;
 }
 
-.brainly-editor > * + * {
-  margin-top: 0.85em;
-}
+.brainly-editor > * + * { margin-top: 0.85em; }
 
 /* Headings */
 .brainly-editor h1 {
   font-family: 'Space Grotesk', system-ui, sans-serif;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
   line-height: 1.2;
   color: var(--text-primary);
-  letter-spacing: -0.3px;
-  margin-top: 1.5em;
+  letter-spacing: -0.4px;
+  margin-top: 1.6em;
   margin-bottom: 0.4em;
+  padding-bottom: 0.25em;
+  border-bottom: 2px solid var(--border);
 }
 
 .brainly-editor h2 {
@@ -52,14 +446,22 @@
   margin-bottom: 0.3em;
 }
 
-/* Paragraphs */
-.brainly-editor p {
-  margin: 0;
-  color: var(--text-primary);
+.brainly-editor h4, .brainly-editor h5, .brainly-editor h6 {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 1.1em;
+  margin-bottom: 0.25em;
 }
+.brainly-editor h4 { font-size: 15px; }
+.brainly-editor h5 { font-size: 13px; }
+.brainly-editor h6 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
 
-/* Bold / Italic / Strike */
-.brainly-editor strong { font-weight: 600; }
+/* Paragraphs */
+.brainly-editor p { margin: 0; color: var(--text-primary); }
+
+/* Inline */
+.brainly-editor strong { font-weight: 700; }
 .brainly-editor em     { font-style: italic; }
 .brainly-editor s      { text-decoration: line-through; color: var(--text-muted); }
 .brainly-editor u      { text-decoration: underline; text-underline-offset: 3px; }
@@ -70,6 +472,7 @@
   font-size: 13px;
   background: var(--surface);
   border: 1px solid var(--border);
+  border-radius: 3px;
   padding: 1px 6px;
   color: var(--primary);
 }
@@ -79,10 +482,10 @@
   background: var(--text-primary);
   color: #E2E8F0;
   padding: 16px 20px;
+  border-radius: 6px;
   overflow-x: auto;
   margin: 1.2em 0;
 }
-
 .brainly-editor pre code {
   font-family: 'DM Mono', monospace;
   font-size: 13px;
@@ -90,18 +493,21 @@
   border: none;
   color: inherit;
   padding: 0;
+  border-radius: 0;
 }
 
 /* Blockquote */
 .brainly-editor blockquote {
   border-left: 3px solid var(--primary);
   margin: 1.2em 0;
-  padding: 4px 0 4px 20px;
+  padding: 8px 0 8px 20px;
   color: var(--text-secondary);
   font-style: italic;
+  background: var(--primary-subtle);
+  border-radius: 0 4px 4px 0;
 }
 
-/* Horizontal Rule */
+/* HR */
 .brainly-editor hr {
   border: none;
   border-top: 1px solid var(--border);
@@ -109,42 +515,25 @@
 }
 
 /* Lists */
-.brainly-editor ul {
-  padding-left: 1.4em;
-  list-style-type: disc;
-}
-
-.brainly-editor ol {
-  padding-left: 1.4em;
-  list-style-type: decimal;
-}
-
-.brainly-editor li {
-  margin: 0.25em 0;
-  color: var(--text-primary);
-}
-
-.brainly-editor li::marker {
-  color: var(--primary);
-}
+.brainly-editor ul { padding-left: 1.4em; list-style-type: disc; }
+.brainly-editor ol { padding-left: 1.4em; list-style-type: decimal; }
+.brainly-editor li { margin: 0.25em 0; color: var(--text-primary); }
+.brainly-editor li::marker { color: var(--primary); }
 
 /* Task list */
 .brainly-editor ul[data-type="taskList"] {
   list-style: none;
   padding-left: 0;
 }
-
 .brainly-editor ul[data-type="taskList"] li {
   display: flex;
   align-items: flex-start;
   gap: 10px;
 }
-
 .brainly-editor ul[data-type="taskList"] li > label {
   flex-shrink: 0;
   margin-top: 3px;
 }
-
 .brainly-editor ul[data-type="taskList"] li input[type="checkbox"] {
   width: 15px;
   height: 15px;
@@ -153,7 +542,6 @@
   accent-color: var(--primary);
   cursor: pointer;
 }
-
 .brainly-editor ul[data-type="taskList"] li[data-checked="true"] > div {
   text-decoration: line-through;
   color: var(--text-muted);
@@ -161,7 +549,7 @@
 
 /* Highlight marks */
 .brainly-editor mark {
-  border-radius: 0;
+  border-radius: 2px;
   padding: 1px 3px;
 }
 
@@ -174,7 +562,6 @@
   height: 0;
   font-style: normal;
 }
-
 .is-editor-empty::before {
   content: attr(data-placeholder);
   color: var(--text-muted);
@@ -184,6 +571,13 @@
 }
 
 /* ── Selection ───────────────────────────────────────────────── */
-.brainly-editor ::selection {
+.brainly-editor ::selection { background: var(--primary-subtle); }
+
+/* ── Slash command highlight in editor ───────────────────────── */
+.brainly-editor .slash-typed {
+  color: var(--primary);
+  font-family: var(--font-mono);
   background: var(--primary-subtle);
+  border-radius: 2px;
+  padding: 0 2px;
 }
