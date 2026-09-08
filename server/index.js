@@ -27,25 +27,33 @@ const pool = new Pool({
 });
 
 const getAuthBaseUrl = () => {
-  if (process.env.BETTER_AUTH_URL && !process.env.BETTER_AUTH_URL.includes('localhost')) {
+  // 1. Explicit override always wins (set this in Vercel env vars dashboard)
+  if (process.env.BETTER_AUTH_URL) {
     return process.env.BETTER_AUTH_URL;
   }
-  if (process.env.VERCEL || process.en=v.NODE_ENV === 'production') {
+  // 2. Vercel auto-injects VERCEL_URL for preview deployments
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  // 3. Production flag
+  if (process.env.NODE_ENV === 'production') {
     return 'https://remor.vercel.app';
   }
+  // 4. Local dev
   return 'http://localhost:3001';
 };
+
+const BASE_URL = getAuthBaseUrl();
 
 const auth = betterAuth({
   database: pool,
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: getAuthBaseUrl(),
+  baseURL: BASE_URL,
   basePath: '/api/auth',
   trustedOrigins: [
     'https://remor.vercel.app',
     'http://localhost:5173',
     'http://localhost:3001',
-    process.env.BETTER_AUTH_URL,
     process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
   ].filter(Boolean),
   emailAndPassword: {
@@ -56,7 +64,7 @@ const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      redirectURI: `${getAuthBaseUrl()}/api/auth/callback/google`,
+      redirectURI: `${BASE_URL}/api/auth/callback/google`,
     },
   },
   advanced: {
@@ -69,8 +77,19 @@ const auth = betterAuth({
 });
 
 // ── Middleware ───────────────────────────────────────────────
+const ALLOWED_ORIGINS = [
+  'https://remor.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3001',
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+].filter(Boolean);
+
 app.use(cors({
-  origin: true,
+  origin: (origin, cb) => {
+    // Allow requests with no origin (curl, server-to-server)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    return cb(null, false);
+  },
   credentials: true,
 }));
 
