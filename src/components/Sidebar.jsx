@@ -11,7 +11,6 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
-  Brain,
   Folder,
   BookOpen,
   X,
@@ -60,9 +59,7 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
     { id: 'today', label: 'Today', icon: Calendar, count: todayCount },
     { id: 'upcoming', label: 'Upcoming', icon: Clock, count: upcomingCount },
     { id: 'starred', label: 'Starred', icon: Star, count: starredCount },
-    { id: 'recent', label: 'Recently Viewed', icon: Clock },
     { id: 'all', label: 'All Items', icon: Layers, count: items.filter(i => i.status !== 'archived').length },
-    { id: 'insights', label: 'AI Insights', icon: Brain, badge: 'AI' },
     { id: 'draw', label: 'Draw', icon: PenTool },
   ];
 
