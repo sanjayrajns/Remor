@@ -11,7 +11,7 @@ const HISTORY_LIMIT = 60;
 const AUTOSAVE_DELAY = 500;
 
 const DEFAULT_STYLE = {
-  stroke: '#94A3B8',
+  stroke: '#2D2A26',
   fill: 'transparent',
   fillOpacity: 0.12,
   strokeWidth: 1.5,
@@ -25,9 +25,8 @@ const DEFAULT_STYLE = {
 };
 
 const COLORS = [
-  'transparent', '#94A3B8', '#E2E8F0', '#3B82F6', '#60A5FA',
-  '#34D399', '#F59E0B', '#F87171', '#C084FC', '#FB923C',
-  '#0D1117',
+  'transparent', '#2D2A26', '#4B5563', '#2563EB', '#0D9488',
+  '#059669', '#D97706', '#DC2626', '#9333EA', '#DB2777', '#FFFFFF',
 ];
 
 const TOOLS = [
@@ -161,15 +160,15 @@ function hitTestElement(el, px, py) {
     return distToSegment(px, py, el.x1, el.y1, el.x2, el.y2) < (el.style.strokeWidth + 6);
   }
   if (el.type === 'text') {
-    return px >= el.x && px <= el.x + (el.w || 100) && py >= el.y && py <= el.y + (el.h || 24);
+    return px >= el.x && px <= el.x + (el.w || 100) && py >= el.y && py <= el.y + (el.h || 28);
   }
   // bbox-based shapes
   const { x, y, w, h } = el;
   if (!w || !h) return false;
   const fill = el.style.fill !== 'transparent' && el.style.fill;
   if (fill) return px >= x && px <= x + w && py >= y && py <= y + h;
-  // stroke-only: check edges only (5px tolerance)
-  const tol = el.style.strokeWidth + 5;
+  // stroke-only: check edges only (6px tolerance)
+  const tol = el.style.strokeWidth + 6;
   const inside = px >= x - tol && px <= x + w + tol && py >= y - tol && py <= y + h + tol;
   const outside = px <= x + tol || px >= x + w - tol || py <= y + tol || py >= y + h - tol;
   return inside && outside;
@@ -207,7 +206,7 @@ function getBBox(el) {
 function drawElement(ctx, el) {
   ctx.save();
   ctx.globalAlpha = el.style.opacity ?? 1;
-  ctx.strokeStyle = el.style.stroke || '#94A3B8';
+  ctx.strokeStyle = el.style.stroke || '#2D2A26';
   ctx.lineWidth = el.style.strokeWidth || 1.5;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
@@ -272,7 +271,6 @@ function drawElement(ctx, el) {
       ctx.closePath();
       applyFill();
       ctx.stroke();
-      // top ellipse cap
       ctx.beginPath();
       ctx.ellipse(x + w / 2, y + ry, w / 2, ry, 0, 0, Math.PI * 2);
       ctx.stroke();
@@ -329,7 +327,7 @@ function drawElement(ctx, el) {
     }
     case 'text': {
       ctx.font = `${el.style.fontSize || 14}px ${el.style.fontFamily || 'DM Mono, monospace'}`;
-      ctx.fillStyle = el.style.stroke || '#E2E8F0';
+      ctx.fillStyle = el.style.stroke || '#2D2A26';
       ctx.textBaseline = 'top';
       const lines = (el.text || '').split('\n');
       const lineH = (el.style.fontSize || 14) * 1.4;
@@ -345,7 +343,7 @@ function drawLabel(ctx, text, cx, cy, style) {
   if (!text) return;
   ctx.save();
   ctx.font = `${style.fontSize || 13}px ${style.fontFamily || 'DM Mono, monospace'}`;
-  ctx.fillStyle = style.stroke || '#E2E8F0';
+  ctx.fillStyle = style.stroke || '#2D2A26';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(text, cx, cy);
@@ -356,7 +354,7 @@ function drawArrowHead(ctx, x1, y1, x2, y2, style) {
   const angle = Math.atan2(y2 - y1, x2 - x1);
   const len = 10 + (style.strokeWidth || 1.5) * 2;
   ctx.save();
-  ctx.fillStyle = style.stroke || '#94A3B8';
+  ctx.fillStyle = style.stroke || '#2D2A26';
   ctx.beginPath();
   ctx.moveTo(x2, y2);
   ctx.lineTo(
@@ -387,7 +385,7 @@ function drawSelectionBox(ctx, el) {
   const bb = getBBox(el);
   if (!bb.w && !bb.h) return;
   ctx.save();
-  ctx.strokeStyle = '#3B82F6';
+  ctx.strokeStyle = '#2563EB';
   ctx.lineWidth = 1.5;
   ctx.setLineDash([4, 3]);
   ctx.strokeRect(bb.x - 6, bb.y - 6, bb.w + 12, bb.h + 12);
@@ -398,7 +396,7 @@ function drawSelectionBox(ctx, el) {
     [bb.x - 6, bb.y + bb.h / 2], [bb.x + bb.w + 6, bb.y + bb.h / 2],
     [bb.x - 6, bb.y + bb.h + 6], [bb.x + bb.w / 2, bb.y + bb.h + 6], [bb.x + bb.w + 6, bb.y + bb.h + 6],
   ];
-  ctx.fillStyle = '#3B82F6';
+  ctx.fillStyle = '#2563EB';
   handles.forEach(([hx, hy]) => {
     ctx.fillRect(hx - 4, hy - 4, 8, 8);
   });
@@ -411,7 +409,7 @@ function drawDotGrid(ctx, vp, canvasW, canvasH) {
   const dotSize = Math.min(1.2, vp.scale * 0.8);
   const startX = ((vp.x % spacing) + spacing) % spacing;
   const startY = ((vp.y % spacing) + spacing) % spacing;
-  ctx.fillStyle = '#1E293B';
+  ctx.fillStyle = '#D8D1C5';
   for (let gx = startX; gx < canvasW; gx += spacing) {
     for (let gy = startY; gy < canvasH; gy += spacing) {
       ctx.beginPath();
@@ -454,7 +452,6 @@ const initialState = () => {
     selectedIds: [],
     tool: 'select',
     style: { ...DEFAULT_STYLE },
-    // transient pointer state (not in history)
     drawing: false,
     dragging: false,
     panning: false,
@@ -535,34 +532,41 @@ function TextOverlay({ el, viewport, onCommit, onCancel }) {
       ref={ref}
       defaultValue={el.text || ''}
       onBlur={e => onCommit(e.target.value)}
-      onKeyDown={e => { if (e.key === 'Escape') onCancel(); if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onCommit(e.target.value); } }}
+      onKeyDown={e => {
+        if (e.key === 'Escape') onCancel();
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          onCommit(e.target.value);
+        }
+      }}
       style={{
         position: 'absolute',
         left: screenX,
         top: screenY,
         minWidth: 120,
         minHeight: 32,
-        background: 'transparent',
-        border: '1.5px solid #3B82F6',
+        background: '#FFFFFF',
+        border: '1.5px solid #2563EB',
+        borderRadius: 4,
         outline: 'none',
-        color: el.style?.stroke || '#E2E8F0',
+        color: el.style?.stroke || '#2D2A26',
         fontSize: `${(el.style?.fontSize || 14) * viewport.scale}px`,
         fontFamily: el.style?.fontFamily || 'DM Mono, monospace',
         lineHeight: 1.4,
         resize: 'both',
-        padding: '2px 4px',
+        padding: '4px 6px',
         zIndex: 200,
-        backdropFilter: 'none',
-        caretColor: '#3B82F6',
+        boxShadow: '0 4px 14px rgba(0,0,0,0.1)',
+        caretColor: '#2563EB',
       }}
     />
   );
 }
 
 /* ─────────────────────────────────────────────────────────────
-   PROPERTIES PANEL
+   HORIZONTAL PROPERTIES BAR (OPTIONS BAR UPWARDS AT TOP)
    ───────────────────────────────────────────────────────────── */
-function PropertiesPanel({ state, dispatch, activePage, onUpdateLabel }) {
+function HorizontalPropsBar({ state, dispatch, activePage, onUpdateLabel }) {
   const { selectedIds, style } = state;
   const selectedEls = activePage.elements.filter(el => selectedIds.includes(el.id));
   const hasSelection = selectedEls.length > 0;
@@ -578,30 +582,39 @@ function PropertiesPanel({ state, dispatch, activePage, onUpdateLabel }) {
     }
   };
 
-  return (
-    <div className="draw-properties-panel">
-      <div className="draw-props-title">Properties</div>
+  const isShape = hasSelection && firstEl && (
+    firstEl.type === 'rectangle' || firstEl.type === 'diamond' ||
+    firstEl.type === 'ellipse' || firstEl.type === 'cylinder' ||
+    firstEl.type === 'hexagon' || firstEl.type === 'cloud'
+  );
 
-      {hasSelection && firstEl && (firstEl.type === 'rectangle' || firstEl.type === 'diamond' || firstEl.type === 'ellipse' || firstEl.type === 'cylinder' || firstEl.type === 'hexagon' || firstEl.type === 'cloud') && (
-        <div className="draw-props-group">
-          <label className="draw-props-label">Label</label>
-          <input
-            className="draw-props-input"
-            placeholder="Label..."
-            defaultValue={firstEl.label || ''}
-            onBlur={e => onUpdateLabel(firstEl.id, e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') onUpdateLabel(firstEl.id, e.target.value); }}
-          />
-        </div>
+  return (
+    <div className="draw-props-bar">
+      {/* Label input if shape selected */}
+      {isShape && (
+        <>
+          <div className="draw-props-item">
+            <span className="draw-props-item-label">Label:</span>
+            <input
+              className="draw-props-input-sm"
+              placeholder="Enter text..."
+              defaultValue={firstEl.label || ''}
+              onBlur={e => onUpdateLabel(firstEl.id, e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') onUpdateLabel(firstEl.id, e.target.value); }}
+            />
+          </div>
+          <div className="draw-props-divider" />
+        </>
       )}
 
-      <div className="draw-props-group">
-        <label className="draw-props-label">Stroke</label>
-        <div className="draw-color-grid">
+      {/* Stroke Color Swatches */}
+      <div className="draw-props-item">
+        <span className="draw-props-item-label">Stroke:</span>
+        <div className="draw-color-row">
           {COLORS.filter(c => c !== 'transparent').map(c => (
             <button
               key={c}
-              className={`draw-color-swatch ${style.stroke === c ? 'active' : ''}`}
+              className={`draw-color-swatch-sm ${style.stroke === c ? 'active' : ''}`}
               style={{ background: c }}
               onClick={() => update({ stroke: c })}
               title={c}
@@ -610,14 +623,20 @@ function PropertiesPanel({ state, dispatch, activePage, onUpdateLabel }) {
         </div>
       </div>
 
-      <div className="draw-props-group">
-        <label className="draw-props-label">Fill</label>
-        <div className="draw-color-grid">
+      <div className="draw-props-divider" />
+
+      {/* Fill Color Swatches */}
+      <div className="draw-props-item">
+        <span className="draw-props-item-label">Fill:</span>
+        <div className="draw-color-row">
           {COLORS.map(c => (
             <button
               key={c}
-              className={`draw-color-swatch ${style.fill === c ? 'active' : ''}`}
-              style={{ background: c === 'transparent' ? 'transparent' : c, border: c === 'transparent' ? '2px dashed #334155' : undefined }}
+              className={`draw-color-swatch-sm ${style.fill === c ? 'active' : ''}`}
+              style={{
+                background: c === 'transparent' ? '#FFFFFF' : c,
+                border: c === 'transparent' ? '1.5px dashed #A8A29E' : undefined,
+              }}
               onClick={() => update({ fill: c })}
               title={c === 'transparent' ? 'None' : c}
             />
@@ -625,76 +644,89 @@ function PropertiesPanel({ state, dispatch, activePage, onUpdateLabel }) {
         </div>
       </div>
 
-      <div className="draw-props-group">
-        <label className="draw-props-label">Stroke Width</label>
-        <input
-          type="range" min="0.5" max="8" step="0.5"
-          value={style.strokeWidth}
-          onChange={e => update({ strokeWidth: parseFloat(e.target.value) })}
-          className="draw-range"
-        />
-        <span className="draw-props-value">{style.strokeWidth}px</span>
-      </div>
+      <div className="draw-props-divider" />
 
-      <div className="draw-props-group">
-        <label className="draw-props-label">Dash</label>
-        <div className="draw-seg">
-          {['solid', 'dashed', 'dotted'].map(d => (
-            <button key={d} className={`draw-seg-btn ${style.dash === d ? 'active' : ''}`} onClick={() => update({ dash: d })}>
-              {d === 'solid' ? '—' : d === 'dashed' ? '- -' : '···'}
+      {/* Stroke Width */}
+      <div className="draw-props-item">
+        <span className="draw-props-item-label">Width:</span>
+        <div className="draw-props-seg">
+          {[1, 2, 3.5, 5].map(w => (
+            <button
+              key={w}
+              className={`draw-props-seg-btn ${style.strokeWidth === w ? 'active' : ''}`}
+              onClick={() => update({ strokeWidth: w })}
+            >
+              {w}px
             </button>
           ))}
         </div>
       </div>
 
-      <div className="draw-props-group">
-        <label className="draw-props-label">Font Size</label>
-        <input
-          type="range" min="10" max="48" step="1"
-          value={style.fontSize}
-          onChange={e => update({ fontSize: parseInt(e.target.value, 10) })}
-          className="draw-range"
-        />
-        <span className="draw-props-value">{style.fontSize}px</span>
+      <div className="draw-props-divider" />
+
+      {/* Dash Style */}
+      <div className="draw-props-item">
+        <span className="draw-props-item-label">Stroke Style:</span>
+        <div className="draw-props-seg">
+          {['solid', 'dashed', 'dotted'].map(d => (
+            <button
+              key={d}
+              className={`draw-props-seg-btn ${style.dash === d ? 'active' : ''}`}
+              onClick={() => update({ dash: d })}
+            >
+              {d === 'solid' ? '— Solid' : d === 'dashed' ? '- - Dash' : '··· Dot'}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="draw-props-group">
-        <label className="draw-props-label">Font</label>
-        <div className="draw-seg">
+      <div className="draw-props-divider" />
+
+      {/* Font Size & Family */}
+      <div className="draw-props-item">
+        <span className="draw-props-item-label">Font:</span>
+        <div className="draw-props-seg">
+          {[12, 14, 18, 24].map(sz => (
+            <button
+              key={sz}
+              className={`draw-props-seg-btn ${style.fontSize === sz ? 'active' : ''}`}
+              onClick={() => update({ fontSize: sz })}
+            >
+              {sz}
+            </button>
+          ))}
+        </div>
+        <div className="draw-props-seg" style={{ marginLeft: 4 }}>
           {[
             { val: 'DM Mono, monospace', label: 'Mono' },
             { val: 'DM Sans, sans-serif', label: 'Sans' },
           ].map(f => (
-            <button key={f.val} className={`draw-seg-btn ${style.fontFamily === f.val ? 'active' : ''}`} onClick={() => update({ fontFamily: f.val })}>
+            <button
+              key={f.val}
+              className={`draw-props-seg-btn ${style.fontFamily === f.val ? 'active' : ''}`}
+              onClick={() => update({ fontFamily: f.val })}
+            >
               {f.label}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="draw-props-group">
-        <label className="draw-props-label">Opacity</label>
-        <input
-          type="range" min="0.1" max="1" step="0.05"
-          value={style.opacity}
-          onChange={e => update({ opacity: parseFloat(e.target.value) })}
-          className="draw-range"
-        />
-        <span className="draw-props-value">{Math.round(style.opacity * 100)}%</span>
-      </div>
-
       {hasSelection && (
-        <div className="draw-props-group" style={{ marginTop: 'auto', paddingTop: 12 }}>
-          <button
-            className="draw-delete-btn"
-            onClick={() => {
-              const elements = activePage.elements.filter(el => !selectedIds.includes(el.id));
-              dispatch({ type: 'COMMIT_ELEMENTS', elements, selectedIds: [] });
-            }}
-          >
-            Delete selected
-          </button>
-        </div>
+        <>
+          <div className="draw-props-divider" />
+          <div className="draw-props-item">
+            <button
+              className="draw-props-delete-btn"
+              onClick={() => {
+                const elements = activePage.elements.filter(el => !selectedIds.includes(el.id));
+                dispatch({ type: 'COMMIT_ELEMENTS', elements, selectedIds: [] });
+              }}
+            >
+              Delete selected
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
@@ -730,7 +762,7 @@ export default function DrawView() {
     const W = canvas.width; const H = canvas.height;
 
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#0D1117';
+    ctx.fillStyle = '#FBF9F5';
     ctx.fillRect(0, 0, W, H);
 
     drawDotGrid(ctx, vp, W, H);
@@ -749,10 +781,10 @@ export default function DrawView() {
     if (pr.rubberBand) {
       const { x, y, w, h } = pr.rubberBand;
       ctx.save();
-      ctx.strokeStyle = '#3B82F6';
+      ctx.strokeStyle = '#2563EB';
       ctx.lineWidth = 1 / vp.scale;
       ctx.setLineDash([4 / vp.scale, 3 / vp.scale]);
-      ctx.fillStyle = 'rgba(59,130,246,0.07)';
+      ctx.fillStyle = 'rgba(37,99,235,0.07)';
       ctx.fillRect(x, y, w, h);
       ctx.strokeRect(x, y, w, h);
       ctx.restore();
@@ -937,7 +969,6 @@ export default function DrawView() {
         const drag = pr.draggingEls.find(d => d.id === el.id);
         if (!drag) return el;
         if (el.type === 'arrow' || el.type === 'line') {
-          const ow = el.x2 - el.x1; const oh = el.y2 - el.y1;
           return { ...el, x1: el.x1 + dx, y1: el.y1 + dy, x2: el.x2 + dx, y2: el.y2 + dy };
         }
         if (el.type === 'freehand') {
@@ -945,13 +976,8 @@ export default function DrawView() {
         }
         return { ...el, x: (el.x || 0) + dx, y: (el.y || 0) + dy };
       });
-      // Update without pushing history during drag (commit on up)
-      const pages = state.pages.map(p =>
-        p.id === state.activePageId ? { ...p, elements } : p
-      );
-      dispatch({ type: 'SET_VIEWPORT', viewport: vp }); // force re-render trick via pages update
-      // We use a local temp update:
-      activePage.elements = elements; // mutate for render, commit on up
+      dispatch({ type: 'SET_VIEWPORT', viewport: vp });
+      activePage.elements = elements;
       pointerRef.current.startX = wx;
       pointerRef.current.startY = wy;
       return;
@@ -967,7 +993,6 @@ export default function DrawView() {
         const { x, y, w, h } = normalizeRect(pr.startX, pr.startY, wx, wy);
         pr.currentEl = { ...el, x, y, w, h };
       }
-      // Temp render: add current element to page
       const elements = [...activePage.elements.filter(e => e.id !== pr.currentEl.id), pr.currentEl];
       activePage.elements = elements;
     }
@@ -976,8 +1001,6 @@ export default function DrawView() {
   const handlePointerUp = useCallback((e) => {
     const pr = pointerRef.current;
     if (!pr.down) return;
-
-    const rect = canvasRef.current?.getBoundingClientRect();
 
     if (pr.mode === 'rubberBand' && pr.rubberBand) {
       const rb = pr.rubberBand;
@@ -990,7 +1013,6 @@ export default function DrawView() {
     }
 
     if (pr.mode === 'drag') {
-      // Commit drag
       const elements = [...activePage.elements];
       dispatch({ type: 'COMMIT_ELEMENTS', elements });
     }
@@ -1007,7 +1029,6 @@ export default function DrawView() {
         dispatch({ type: 'COMMIT_ELEMENTS', elements, selectedIds: [el.id] });
         if (state.tool !== 'freehand') dispatch({ type: 'SET_TOOL', tool: 'select' });
       } else {
-        // Remove temp element
         activePage.elements = activePage.elements.filter(e => e.id !== el.id);
       }
     }
@@ -1055,17 +1076,22 @@ export default function DrawView() {
     if (!editingTextEl) return;
     const existing = activePage.elements.find(el => el.id === editingTextEl.id);
     if (!text.trim()) {
-      // Remove if empty
       if (existing) {
         const elements = activePage.elements.filter(el => el.id !== editingTextEl.id);
         dispatch({ type: 'COMMIT_ELEMENTS', elements });
       }
     } else {
-      const updated = { ...editingTextEl, text };
+      const lines = text.split('\n');
+      const maxLen = Math.max(...lines.map(l => l.length), 1);
+      const fontPx = editingTextEl.style?.fontSize || 14;
+      const w = Math.max(60, maxLen * (fontPx * 0.65));
+      const h = Math.max(24, lines.length * (fontPx * 1.4));
+      const updated = { ...editingTextEl, text, w, h };
       const elements = existing
         ? activePage.elements.map(el => el.id === updated.id ? updated : el)
         : [...activePage.elements, updated];
-      dispatch({ type: 'COMMIT_ELEMENTS', elements });
+      dispatch({ type: 'COMMIT_ELEMENTS', elements, selectedIds: [updated.id] });
+      dispatch({ type: 'SET_TOOL', tool: 'select' });
     }
     setEditingTextEl(null);
   }, [editingTextEl, activePage]);
@@ -1144,6 +1170,14 @@ export default function DrawView() {
         </div>
       </div>
 
+      {/* ── Horizontal Options Bar Upwards ────────────────────────── */}
+      <HorizontalPropsBar
+        state={state}
+        dispatch={dispatch}
+        activePage={activePage}
+        onUpdateLabel={(id, label) => dispatch({ type: 'UPDATE_ELEMENT_LABEL', id, label })}
+      />
+
       {/* ── Canvas Area ───────────────────────── */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
         {/* Left Toolbar */}
@@ -1195,14 +1229,6 @@ export default function DrawView() {
             </button>
           )}
         </div>
-
-        {/* Right Properties Panel */}
-        <PropertiesPanel
-          state={state}
-          dispatch={dispatch}
-          activePage={activePage}
-          onUpdateLabel={(id, label) => dispatch({ type: 'UPDATE_ELEMENT_LABEL', id, label })}
-        />
       </div>
     </div>
   );

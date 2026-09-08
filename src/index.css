@@ -813,7 +813,7 @@ kbd {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   DRAW CANVAS — PREMIUM DARK WORKSPACE
+   DRAW CANVAS — PREMIUM BEIGE WORKSPACE
    ───────────────────────────────────────────────────────────── */
 
 /* Workspace layout */
@@ -822,7 +822,7 @@ kbd {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background: #0D1117;
+  background: #FBF9F5;
   overflow: hidden;
   font-family: var(--font-mono);
 }
@@ -833,8 +833,8 @@ kbd {
   align-items: center;
   justify-content: space-between;
   height: 44px;
-  background: #0D1117;
-  border-bottom: 1px solid #1E293B;
+  background: #F3EFE6;
+  border-bottom: 1px solid #E5DFD3;
   padding: 0 12px 0 0;
   flex-shrink: 0;
   gap: 8px;
@@ -858,27 +858,28 @@ kbd {
   gap: 6px;
   padding: 0 14px;
   font-size: 12px;
-  color: #64748B;
+  color: #78716C;
   cursor: pointer;
-  border-right: 1px solid #1E293B;
+  border-right: 1px solid #E5DFD3;
   user-select: none;
   white-space: nowrap;
   transition: color 120ms ease, background 120ms ease;
   height: 100%;
   min-width: 90px;
 }
-.draw-tab:hover { color: #94A3B8; background: #111827; }
+.draw-tab:hover { color: #2D2A26; background: #EFEAE1; }
 .draw-tab.active {
-  color: #E2E8F0;
-  background: #111827;
-  border-bottom: 2px solid #3B82F6;
+  color: #1C1917;
+  background: #FBF9F5;
+  border-bottom: 2px solid #2563EB;
+  font-weight: 600;
 }
 
 .draw-tab-rename {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #3B82F6;
-  color: #E2E8F0;
+  border-bottom: 1px solid #2563EB;
+  color: #1C1917;
   font-size: 12px;
   font-family: var(--font-mono);
   width: 100px;
@@ -893,13 +894,13 @@ kbd {
   width: 16px;
   height: 16px;
   border-radius: 3px;
-  color: #475569;
+  color: #A8A29E;
   font-size: 14px;
   line-height: 1;
   transition: background 100ms ease, color 100ms ease;
   flex-shrink: 0;
 }
-.draw-tab-close:hover { background: #1E293B; color: #F87171; }
+.draw-tab-close:hover { background: #E5DFD3; color: #DC2626; }
 
 .draw-tab-add {
   display: inline-flex;
@@ -907,14 +908,14 @@ kbd {
   justify-content: center;
   width: 36px;
   height: 100%;
-  color: #475569;
+  color: #78716C;
   font-size: 18px;
   font-weight: 300;
   transition: color 120ms ease;
   flex-shrink: 0;
-  border-right: 1px solid #1E293B;
+  border-right: 1px solid #E5DFD3;
 }
-.draw-tab-add:hover { color: #3B82F6; }
+.draw-tab-add:hover { color: #2563EB; background: #EFEAE1; }
 
 /* Top bar right actions */
 .draw-topbar-actions {
@@ -928,9 +929,9 @@ kbd {
   display: flex;
   align-items: center;
   gap: 2px;
-  background: #111827;
-  border: 1px solid #1E293B;
-  border-radius: 4px;
+  background: #FFFFFF;
+  border: 1px solid #E5DFD3;
+  border-radius: 6px;
   padding: 2px 4px;
 }
 .draw-zoom-btn {
@@ -939,19 +940,20 @@ kbd {
   justify-content: center;
   width: 22px;
   height: 22px;
-  color: #64748B;
+  color: #57534E;
   font-size: 16px;
-  font-weight: 300;
-  border-radius: 3px;
+  font-weight: 400;
+  border-radius: 4px;
   transition: color 100ms ease, background 100ms ease;
 }
-.draw-zoom-btn:hover { color: #E2E8F0; background: #1E293B; }
+.draw-zoom-btn:hover { color: #1C1917; background: #F3EFE6; }
 .draw-zoom-label {
   font-size: 11px;
-  color: #64748B;
+  color: #57534E;
   min-width: 38px;
   text-align: center;
   font-family: var(--font-mono);
+  font-weight: 500;
 }
 
 .draw-topbar-btn {
@@ -961,25 +963,127 @@ kbd {
   padding: 4px 10px;
   font-size: 11px;
   font-family: var(--font-mono);
-  border-radius: 4px;
-  color: #64748B;
-  border: 1px solid #1E293B;
-  background: transparent;
+  border-radius: 6px;
+  color: #57534E;
+  border: 1px solid #E5DFD3;
+  background: #FFFFFF;
   transition: all 120ms ease;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
-.draw-topbar-btn:hover { color: #E2E8F0; background: #111827; border-color: #334155; }
+.draw-topbar-btn:hover { color: #1C1917; background: #F5F2EB; border-color: #D6CEC2; }
 .draw-topbar-btn--secondary {
-  color: #94A3B8;
-  border-color: #1E293B;
+  color: #44403C;
 }
-.draw-topbar-btn--secondary:hover { color: #E2E8F0; }
 .draw-topbar-btn--primary {
-  color: #3B82F6;
-  border-color: #1E3A5F;
-  background: rgba(59,130,246,0.06);
+  color: #1D4ED8;
+  border-color: #BFDBFE;
+  background: #EFF6FF;
 }
-.draw-topbar-btn--primary:hover { background: rgba(59,130,246,0.14); border-color: #3B82F6; }
+.draw-topbar-btn--primary:hover { background: #DBEAFE; border-color: #93C5FD; }
+
+/* ── Horizontal Properties Bar (Upwards Top Bar) ────────────────────────── */
+.draw-props-bar {
+  display: flex;
+  align-items: center;
+  height: 42px;
+  background: #F3EFE6;
+  border-bottom: 1px solid #E5DFD3;
+  padding: 0 14px;
+  gap: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+  z-index: 9;
+}
+.draw-props-bar::-webkit-scrollbar { display: none; }
+
+.draw-props-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.draw-props-item-label {
+  font-size: 10px;
+  color: #78716C;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.draw-props-divider {
+  width: 1px;
+  height: 20px;
+  background: #E5DFD3;
+  flex-shrink: 0;
+}
+
+/* Color swatches in top bar */
+.draw-color-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.draw-color-swatch-sm {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  cursor: pointer;
+  transition: transform 100ms ease, border-color 120ms ease, box-shadow 120ms ease;
+  flex-shrink: 0;
+}
+.draw-color-swatch-sm:hover { transform: scale(1.2); z-index: 2; }
+.draw-color-swatch-sm.active {
+  border-color: #2563EB;
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.3);
+  z-index: 1;
+}
+
+/* Segment buttons (dash / font / width) */
+.draw-props-seg {
+  display: flex;
+  gap: 2px;
+  background: #FFFFFF;
+  border: 1px solid #E5DFD3;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.draw-props-seg-btn {
+  padding: 3px 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: #57534E;
+  border-radius: 4px;
+  transition: all 100ms ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.draw-props-seg-btn:hover { color: #1C1917; background: #F3EFE6; }
+.draw-props-seg-btn.active { color: #1D4ED8; background: #EFF6FF; font-weight: 600; }
+
+.draw-props-input-sm {
+  background: #FFFFFF;
+  border: 1px solid #E5DFD3;
+  border-radius: 6px;
+  color: #1C1917;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  padding: 3px 8px;
+  outline: none;
+  transition: border-color 120ms ease;
+  min-width: 110px;
+}
+.draw-props-input-sm:focus { border-color: #2563EB; }
 
 /* ── Left Tool Toolbar ───────────────────────────────────── */
 .draw-toolbar {
@@ -988,9 +1092,9 @@ kbd {
   align-items: center;
   width: 48px;
   padding: 10px 6px;
-  background: #0D1117;
-  border-right: 1px solid #1E293B;
-  gap: 2px;
+  background: #F3EFE6;
+  border-right: 1px solid #E5DFD3;
+  gap: 3px;
   flex-shrink: 0;
   overflow-y: auto;
   scrollbar-width: none;
@@ -1003,8 +1107,8 @@ kbd {
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 6px;
-  color: #475569;
+  border-radius: 8px;
+  color: #57534E;
   background: transparent;
   border: 1px solid transparent;
   transition: all 120ms ease;
@@ -1012,169 +1116,39 @@ kbd {
   flex-shrink: 0;
 }
 .draw-tool-btn:hover {
-  color: #94A3B8;
-  background: #111827;
-  border-color: #1E293B;
+  color: #1C1917;
+  background: #EFEAE1;
+  border-color: #E5DFD3;
 }
 .draw-tool-btn.active {
-  color: #3B82F6;
-  background: rgba(59,130,246,0.12);
-  border-color: rgba(59,130,246,0.3);
+  color: #1D4ED8;
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  box-shadow: 0 1px 3px rgba(37,99,235,0.1);
 }
 
 .draw-toolbar-sep {
   width: 24px;
   height: 1px;
-  background: #1E293B;
+  background: #E5DFD3;
   margin: 4px 0;
   flex-shrink: 0;
 }
 
-/* ── Right Properties Panel ─────────────────────────────── */
-.draw-properties-panel {
-  width: 200px;
-  background: #0D1117;
-  border-left: 1px solid #1E293B;
-  display: flex;
-  flex-direction: column;
-  padding: 12px 10px;
-  gap: 0;
-  overflow-y: auto;
-  flex-shrink: 0;
-  scrollbar-width: thin;
-  scrollbar-color: #1E293B transparent;
-}
-
-.draw-props-title {
-  font-size: 10px;
-  font-family: var(--font-mono);
-  color: #334155;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
-
-.draw-props-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-
-.draw-props-label {
-  font-size: 10px;
-  color: #475569;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.draw-props-input {
-  background: #111827;
-  border: 1px solid #1E293B;
-  border-radius: 4px;
-  color: #94A3B8;
-  font-size: 12px;
-  font-family: var(--font-mono);
-  padding: 5px 8px;
-  outline: none;
-  transition: border-color 120ms ease;
-  width: 100%;
-}
-.draw-props-input:focus { border-color: #3B82F6; }
-
-.draw-props-value {
-  font-size: 10px;
-  color: #334155;
-  font-family: var(--font-mono);
-  align-self: flex-end;
-}
-
-/* Color grid */
-.draw-color-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-}
-
-.draw-color-swatch {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 4px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: transform 100ms ease, border-color 120ms ease;
-}
-.draw-color-swatch:hover { transform: scale(1.15); border-color: #475569; }
-.draw-color-swatch.active { border-color: #3B82F6; transform: scale(1.1); }
-
-/* Range inputs */
-.draw-range {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 3px;
-  background: #1E293B;
-  border-radius: 2px;
-  outline: none;
-  border: none;
-}
-.draw-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #3B82F6;
-  cursor: pointer;
-  border: 2px solid #0D1117;
-  box-shadow: 0 0 0 1px rgba(59,130,246,0.5);
-}
-.draw-range::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #3B82F6;
-  cursor: pointer;
-  border: 2px solid #0D1117;
-}
-
-/* Segment buttons (dash / font) */
-.draw-seg {
-  display: flex;
-  gap: 2px;
-  background: #111827;
-  border: 1px solid #1E293B;
-  border-radius: 4px;
-  padding: 2px;
-}
-.draw-seg-btn {
-  flex: 1;
-  padding: 3px 4px;
-  font-size: 10px;
-  font-family: var(--font-mono);
-  color: #475569;
-  border-radius: 3px;
-  transition: all 100ms ease;
-  text-align: center;
-}
-.draw-seg-btn:hover { color: #94A3B8; background: #1E293B; }
-.draw-seg-btn.active { color: #3B82F6; background: rgba(59,130,246,0.15); }
-
-/* Delete button */
-.draw-delete-btn {
-  width: 100%;
-  padding: 6px 8px;
+/* Delete button horizontal */
+.draw-props-delete-btn {
+  padding: 3px 10px;
   font-size: 11px;
   font-family: var(--font-mono);
-  color: #F87171;
-  border: 1px solid rgba(248,113,113,0.2);
-  background: rgba(248,113,113,0.05);
-  border-radius: 4px;
+  color: #DC2626;
+  border: 1px solid #FCA5A5;
+  background: #FEF2F2;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 120ms ease;
+  font-weight: 500;
 }
-.draw-delete-btn:hover { background: rgba(248,113,113,0.12); border-color: rgba(248,113,113,0.4); }
+.draw-props-delete-btn:hover { background: #FEE2E2; border-color: #F87171; }
 
 /* Zoom reset button */
 .draw-zoom-reset {
@@ -1183,21 +1157,21 @@ kbd {
   left: 50%;
   transform: translateX(-50%);
   padding: 6px 14px;
-  background: rgba(15,23,42,0.9);
-  border: 1px solid #334155;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid #D6CEC2;
   border-radius: 20px;
   font-size: 11px;
   font-family: var(--font-mono);
-  color: #94A3B8;
+  color: #44403C;
   cursor: pointer;
   backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   transition: all 120ms ease;
 }
-.draw-zoom-reset:hover { color: #E2E8F0; border-color: #3B82F6; }
+.draw-zoom-reset:hover { color: #1C1917; border-color: #2563EB; }
 
-/* ── Mobile: hide draw panel on small screens ─────────── */
 @media (max-width: 768px) {
-  .draw-properties-panel { display: none; }
   .draw-toolbar { width: 42px; }
 }
+
 
