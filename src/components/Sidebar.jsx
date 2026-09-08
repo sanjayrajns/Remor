@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   Inbox,
   Calendar,
-  Clock,
   Star,
   Layers,
   FolderPlus,
@@ -26,7 +25,6 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
     setActiveView,
     getInboxCount,
     getTodayItems,
-    getUpcomingItems,
     items,
     collections,
     addCollection,
@@ -42,7 +40,6 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
 
   const inboxCount = getInboxCount();
   const todayCount = getTodayItems().length;
-  const upcomingCount = getUpcomingItems().length;
   const starredCount = items.filter(i => i.starred && i.status !== 'archived').length;
   const topTags = getAllTags().slice(0, 10);
 
@@ -57,7 +54,6 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
   const navItems = [
     { id: 'inbox', label: 'Inbox', icon: Inbox, count: inboxCount },
     { id: 'today', label: 'Today', icon: Calendar, count: todayCount },
-    { id: 'upcoming', label: 'Upcoming', icon: Clock, count: upcomingCount },
     { id: 'starred', label: 'Starred', icon: Star, count: starredCount },
     { id: 'all', label: 'All Items', icon: Layers, count: items.filter(i => i.status !== 'archived').length },
     { id: 'draw', label: 'Draw', icon: PenTool },
