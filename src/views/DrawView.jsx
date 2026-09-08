@@ -137,49 +137,13 @@ function EraserIcon() {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   GEOMETRY HELPERS
+   GEOMETRY & HANDLE HELPERS
    ───────────────────────────────────────────────────────────── */
 function normalizeRect(x1, y1, x2, y2) {
   return {
     x: Math.min(x1, x2), y: Math.min(y1, y2),
     w: Math.abs(x2 - x1), h: Math.abs(y2 - y1),
   };
-}
-
-function hitTestElement(el, px, py) {
-  if (el.type === 'freehand') {
-    if (!el.points || el.points.length < 2) return false;
-    for (let i = 0; i < el.points.length - 1; i++) {
-      const [x1, y1] = el.points[i];
-      const [x2, y2] = el.points[i + 1];
-      if (distToSegment(px, py, x1, y1, x2, y2) < (el.style.strokeWidth + 6)) return true;
-    }
-    return false;
-  }
-  if (el.type === 'arrow' || el.type === 'line') {
-    return distToSegment(px, py, el.x1, el.y1, el.x2, el.y2) < (el.style.strokeWidth + 6);
-  }
-  if (el.type === 'text') {
-    return px >= el.x && px <= el.x + (el.w || 100) && py >= el.y && py <= el.y + (el.h || 28);
-  }
-  // bbox-based shapes
-  const { x, y, w, h } = el;
-  if (!w || !h) return false;
-  const fill = el.style.fill !== 'transparent' && el.style.fill;
-  if (fill) return px >= x && px <= x + w && py >= y && py <= y + h;
-  // stroke-only: check edges only (6px tolerance)
-  const tol = el.style.strokeWidth + 6;
-  const inside = px >= x - tol && px <= x + w + tol && py >= y - tol && py <= y + h + tol;
-  const outside = px <= x + tol || px >= x + w - tol || py <= y + tol || py >= y + h - tol;
-  return inside && outside;
-}
-
-function distToSegment(px, py, x1, y1, x2, y2) {
-  const dx = x2 - x1; const dy = y2 - y1;
-  const lenSq = dx * dx + dy * dy;
-  if (lenSq === 0) return Math.hypot(px - x1, py - y1);
-  const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / lenSq));
-  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
 }
 
 function getBBox(el) {
@@ -198,6 +162,73 @@ function getBBox(el) {
     return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
   }
   return { x: el.x || 0, y: el.y || 0, w: el.w || 0, h: el.h || 0 };
+}
+
+function getHandles(el) {
+  if (el.type === 'arrow' || el.type === 'line') {
+    return [
+      { id: 'start', x: el.x1, y: el.y1, cursor: 'crosshair' },
+      { id: 'end', x: el.x2, y: el.y2, cursor: 'crosshair' },
+    ];
+  }
+  const bb = getBBox(el);
+  if (!bb.w && !bb.h) return [];
+  const { x, y, w, h } = bb;
+  return [
+    { id: 'nw', x: x, y: y, cursor: 'nwse-resize' },
+    { id: 'n', x: x + w / 2, y: y, cursor: 'ns-resize' },
+    { id: 'ne', x: x + w, y: y, cursor: 'nesw-resize' },
+    { id: 'w', x: x, y: y + h / 2, cursor: 'ew-resize' },
+    { id: 'e', x: x + w, y: y + h / 2, cursor: 'ew-resize' },
+    { id: 'sw', x: x, y: y + h, cursor: 'nesw-resize' },
+    { id: 's', x: x + w / 2, y: y + h, cursor: 'ns-resize' },
+    { id: 'se', x: x + w, y: y + h, cursor: 'nwse-resize' },
+  ];
+}
+
+function getHandleAtPosition(el, wx, wy, scale = 1) {
+  const handles = getHandles(el);
+  const tol = 10 / scale;
+  for (const h of handles) {
+    if (Math.hypot(wx - h.x, wy - h.y) <= tol) {
+      return h;
+    }
+  }
+  return null;
+}
+
+function hitTestElement(el, px, py) {
+  if (el.type === 'freehand') {
+    if (!el.points || el.points.length < 2) return false;
+    for (let i = 0; i < el.points.length - 1; i++) {
+      const [x1, y1] = el.points[i];
+      const [x2, y2] = el.points[i + 1];
+      if (distToSegment(px, py, x1, y1, x2, y2) < (el.style.strokeWidth + 6)) return true;
+    }
+    return false;
+  }
+  if (el.type === 'arrow' || el.type === 'line') {
+    return distToSegment(px, py, el.x1, el.y1, el.x2, el.y2) < (el.style.strokeWidth + 6);
+  }
+  if (el.type === 'text') {
+    return px >= el.x && px <= el.x + (el.w || 100) && py >= el.y && py <= el.y + (el.h || 28);
+  }
+  const { x, y, w, h } = el;
+  if (!w || !h) return false;
+  const fill = el.style.fill !== 'transparent' && el.style.fill;
+  if (fill) return px >= x && px <= x + w && py >= y && py <= y + h;
+  const tol = el.style.strokeWidth + 6;
+  const inside = px >= x - tol && px <= x + w + tol && py >= y - tol && py <= y + h + tol;
+  const outside = px <= x + tol || px >= x + w - tol || py <= y + tol || py >= y + h - tol;
+  return inside && outside;
+}
+
+function distToSegment(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1; const dy = y2 - y1;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq === 0) return Math.hypot(px - x1, py - y1);
+  const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / lenSq));
+  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -253,7 +284,7 @@ function drawElement(ctx, el) {
     case 'ellipse': {
       const { x, y, w, h } = el;
       ctx.beginPath();
-      ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + w / 2, y + h / 2, Math.max(1, w / 2), Math.max(1, h / 2), 0, 0, Math.PI * 2);
       applyFill();
       ctx.stroke();
       if (el.label) drawLabel(ctx, el.label, x + w / 2, y + h / 2, el.style);
@@ -265,14 +296,14 @@ function drawElement(ctx, el) {
       ctx.beginPath();
       ctx.moveTo(x, y + ry);
       ctx.lineTo(x, y + h - ry);
-      ctx.ellipse(x + w / 2, y + h - ry, w / 2, ry, 0, Math.PI, 0);
+      ctx.ellipse(x + w / 2, y + h - ry, Math.max(1, w / 2), ry, 0, Math.PI, 0);
       ctx.lineTo(x + w, y + ry);
-      ctx.ellipse(x + w / 2, y + ry, w / 2, ry, 0, 0, Math.PI);
+      ctx.ellipse(x + w / 2, y + ry, Math.max(1, w / 2), ry, 0, 0, Math.PI);
       ctx.closePath();
       applyFill();
       ctx.stroke();
       ctx.beginPath();
-      ctx.ellipse(x + w / 2, y + ry, w / 2, ry, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + w / 2, y + ry, Math.max(1, w / 2), ry, 0, 0, Math.PI * 2);
       ctx.stroke();
       if (el.label) drawLabel(ctx, el.label, x + w / 2, y + h / 2 + ry * 0.5, el.style);
       break;
@@ -372,7 +403,7 @@ function drawArrowHead(ctx, x1, y1, x2, y2, style) {
 
 function drawCloud(ctx, x, y, w, h) {
   const cx = x + w / 2; const cy = y + h / 2;
-  const r1 = w * 0.2; const r2 = w * 0.15; const r3 = w * 0.18;
+  const r1 = Math.max(1, w * 0.2); const r2 = Math.max(1, w * 0.15); const r3 = Math.max(1, w * 0.18);
   ctx.beginPath();
   ctx.arc(cx - r1 * 0.6, cy + h * 0.08, r1, Math.PI, 0);
   ctx.arc(cx + r2 * 0.8, cy, r2, Math.PI, 0);
@@ -383,22 +414,26 @@ function drawCloud(ctx, x, y, w, h) {
 
 function drawSelectionBox(ctx, el) {
   const bb = getBBox(el);
-  if (!bb.w && !bb.h) return;
   ctx.save();
   ctx.strokeStyle = '#2563EB';
   ctx.lineWidth = 1.5;
   ctx.setLineDash([4, 3]);
-  ctx.strokeRect(bb.x - 6, bb.y - 6, bb.w + 12, bb.h + 12);
+
+  if (el.type === 'arrow' || el.type === 'line') {
+    ctx.strokeRect(bb.x - 4, bb.y - 4, bb.w + 8, bb.h + 8);
+  } else {
+    ctx.strokeRect(bb.x - 4, bb.y - 4, bb.w + 8, bb.h + 8);
+  }
   ctx.setLineDash([]);
-  // handles
-  const handles = [
-    [bb.x - 6, bb.y - 6], [bb.x + bb.w / 2, bb.y - 6], [bb.x + bb.w + 6, bb.y - 6],
-    [bb.x - 6, bb.y + bb.h / 2], [bb.x + bb.w + 6, bb.y + bb.h / 2],
-    [bb.x - 6, bb.y + bb.h + 6], [bb.x + bb.w / 2, bb.y + bb.h + 6], [bb.x + bb.w + 6, bb.y + bb.h + 6],
-  ];
-  ctx.fillStyle = '#2563EB';
-  handles.forEach(([hx, hy]) => {
-    ctx.fillRect(hx - 4, hy - 4, 8, 8);
+
+  // Draw white square handles with blue stroke
+  const handles = getHandles(el);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1.5;
+  handles.forEach(h => {
+    ctx.fillRect(h.x - 4, h.y - 4, 8, 8);
+    ctx.strokeRect(h.x - 4, h.y - 4, 8, 8);
   });
   ctx.restore();
 }
@@ -524,19 +559,38 @@ function pushHistory(state) {
    ───────────────────────────────────────────────────────────── */
 function TextOverlay({ el, viewport, onCommit, onCancel }) {
   const ref = useRef(null);
-  useEffect(() => { ref.current?.focus(); ref.current?.select(); }, []);
+  const committedRef = useRef(false);
+
+  useEffect(() => {
+    ref.current?.focus();
+    ref.current?.select();
+  }, []);
+
+  const handleCommit = (val) => {
+    if (committedRef.current) return;
+    committedRef.current = true;
+    onCommit(el, val);
+  };
+
+  const handleCancel = () => {
+    if (committedRef.current) return;
+    committedRef.current = true;
+    onCancel();
+  };
+
   const screenX = el.x * viewport.scale + viewport.x;
   const screenY = el.y * viewport.scale + viewport.y;
+
   return (
     <textarea
       ref={ref}
       defaultValue={el.text || ''}
-      onBlur={e => onCommit(e.target.value)}
+      onBlur={e => handleCommit(e.target.value)}
       onKeyDown={e => {
-        if (e.key === 'Escape') onCancel();
+        if (e.key === 'Escape') handleCancel();
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-          onCommit(e.target.value);
+          handleCommit(e.target.value);
         }
       }}
       style={{
@@ -544,9 +598,9 @@ function TextOverlay({ el, viewport, onCommit, onCancel }) {
         left: screenX,
         top: screenY,
         minWidth: 120,
-        minHeight: 32,
+        minHeight: 36,
         background: '#FFFFFF',
-        border: '1.5px solid #2563EB',
+        border: '2px solid #2563EB',
         borderRadius: 4,
         outline: 'none',
         color: el.style?.stroke || '#2D2A26',
@@ -556,7 +610,7 @@ function TextOverlay({ el, viewport, onCommit, onCancel }) {
         resize: 'both',
         padding: '4px 6px',
         zIndex: 200,
-        boxShadow: '0 4px 14px rgba(0,0,0,0.1)',
+        boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
         caretColor: '#2563EB',
       }}
     />
@@ -739,11 +793,16 @@ export default function DrawView() {
   const [state, dispatch] = useReducer(reducer, null, initialState);
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
-  const pointerRef = useRef({ down: false, startX: 0, startY: 0, lastX: 0, lastY: 0, mode: null, currentEl: null, draggingEls: null, rubberBand: null });
+  const pointerRef = useRef({
+    down: false, startX: 0, startY: 0, lastX: 0, lastY: 0,
+    mode: null, currentEl: null, draggingEls: null, rubberBand: null,
+    handle: null, initialEl: null,
+  });
   const animRef = useRef(null);
   const autosaveRef = useRef(null);
   const [editingTextEl, setEditingTextEl] = useState(null);
   const [renamingPageId, setRenamingPageId] = useState(null);
+  const [hoverCursor, setHoverCursor] = useState('default');
 
   const activePage = state.pages.find(p => p.id === state.activePageId) || state.pages[0];
   const vp = activePage.viewport;
@@ -864,8 +923,9 @@ export default function DrawView() {
 
   // ── Pointer events ───────────────────────────────────────
   const handlePointerDown = useCallback((e) => {
+    if (editingTextEl) return; // Prevent creating new text box while editing an active one
+
     if (e.button === 1 || (e.button === 0 && e.altKey)) {
-      // Middle button / alt+drag → pan
       pointerRef.current = { ...pointerRef.current, down: true, mode: 'pan', startX: e.clientX, startY: e.clientY, lastX: e.clientX, lastY: e.clientY };
       return;
     }
@@ -879,6 +939,27 @@ export default function DrawView() {
     const tool = state.tool;
 
     if (tool === 'select') {
+      // Check if clicking on a resize handle of a single selected element
+      if (state.selectedIds.length === 1) {
+        const selectedEl = activePage.elements.find(el => el.id === state.selectedIds[0]);
+        if (selectedEl) {
+          const hitHandle = getHandleAtPosition(selectedEl, wx, wy, vp.scale);
+          if (hitHandle) {
+            pointerRef.current = {
+              down: true,
+              mode: 'resize',
+              handle: hitHandle.id,
+              initialEl: JSON.parse(JSON.stringify(selectedEl)),
+              startX: wx,
+              startY: wy,
+              lastX: wx,
+              lastY: wy,
+            };
+            return;
+          }
+        }
+      }
+
       // Try to hit an element
       const hit = [...activePage.elements].reverse().find(el => hitTestElement(el, wx, wy));
       if (hit) {
@@ -887,7 +968,6 @@ export default function DrawView() {
           ? (isAlreadySelected ? state.selectedIds.filter(id => id !== hit.id) : [...state.selectedIds, hit.id])
           : [hit.id];
         dispatch({ type: 'SET_SELECTED', ids: newSelected });
-        // Store drag offsets
         const dragEls = activePage.elements
           .filter(el => newSelected.includes(el.id))
           .map(el => {
@@ -896,7 +976,6 @@ export default function DrawView() {
           });
         pointerRef.current = { ...pointerRef.current, down: true, mode: 'drag', startX: wx, startY: wy, lastX: wx, lastY: wy, draggingEls: dragEls };
       } else {
-        // Start rubber band
         dispatch({ type: 'SET_SELECTED', ids: [] });
         pointerRef.current = { ...pointerRef.current, down: true, mode: 'rubberBand', startX: wx, startY: wy, lastX: wx, lastY: wy, rubberBand: { x: wx, y: wy, w: 0, h: 0 } };
       }
@@ -932,14 +1011,31 @@ export default function DrawView() {
       newEl.x = wx; newEl.y = wy; newEl.w = 0; newEl.h = 0;
     }
     pointerRef.current = { ...pointerRef.current, down: true, mode: 'draw', startX: wx, startY: wy, lastX: wx, lastY: wy, currentEl: newEl };
-  }, [state.tool, state.selectedIds, state.style, activePage, toWorld]);
+  }, [state.tool, state.selectedIds, state.style, activePage, toWorld, editingTextEl, vp.scale]);
 
   const handlePointerMove = useCallback((e) => {
-    const pr = pointerRef.current;
-    if (!pr.down) return;
-
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
+    const sx = e.clientX - rect.left;
+    const sy = e.clientY - rect.top;
+    const { x: wx, y: wy } = toWorld(sx, sy);
+
+    const pr = pointerRef.current;
+
+    // Hover cursor check when pointer is not down
+    if (!pr.down && state.tool === 'select' && state.selectedIds.length === 1) {
+      const selectedEl = activePage.elements.find(el => el.id === state.selectedIds[0]);
+      if (selectedEl) {
+        const hitHandle = getHandleAtPosition(selectedEl, wx, wy, vp.scale);
+        if (hitHandle) {
+          setHoverCursor(hitHandle.cursor);
+          return;
+        }
+      }
+      setHoverCursor('default');
+    }
+
+    if (!pr.down) return;
 
     if (pr.mode === 'pan') {
       const dx = e.clientX - pr.lastX;
@@ -950,15 +1046,74 @@ export default function DrawView() {
       return;
     }
 
-    const sx = e.clientX - rect.left;
-    const sy = e.clientY - rect.top;
-    const { x: wx, y: wy } = toWorld(sx, sy);
     pointerRef.current.lastX = wx;
     pointerRef.current.lastY = wy;
 
     if (pr.mode === 'rubberBand') {
       const rb = normalizeRect(pr.startX, pr.startY, wx, wy);
       pointerRef.current.rubberBand = rb;
+      return;
+    }
+
+    if (pr.mode === 'resize' && pr.initialEl && pr.handle) {
+      const dx = wx - pr.startX;
+      const dy = wy - pr.startY;
+      const initial = pr.initialEl;
+      let resizedEl = { ...initial };
+
+      if (initial.type === 'arrow' || initial.type === 'line') {
+        if (pr.handle === 'start') {
+          resizedEl.x1 = initial.x1 + dx;
+          resizedEl.y1 = initial.y1 + dy;
+        } else if (pr.handle === 'end') {
+          resizedEl.x2 = initial.x2 + dx;
+          resizedEl.y2 = initial.y2 + dy;
+        }
+      } else if (initial.type === 'freehand') {
+        const origBB = getBBox(initial);
+        if (origBB.w > 0 && origBB.h > 0) {
+          let newX = origBB.x; let newY = origBB.y;
+          let newW = origBB.w; let newH = origBB.h;
+          const h = pr.handle;
+          if (h.includes('e')) newW = Math.max(10, origBB.w + dx);
+          if (h.includes('s')) newH = Math.max(10, origBB.h + dy);
+          if (h.includes('w')) { newX = origBB.x + dx; newW = Math.max(10, origBB.w - dx); }
+          if (h.includes('n')) { newY = origBB.y + dy; newH = Math.max(10, origBB.h - dy); }
+
+          const scaleX = newW / origBB.w;
+          const scaleY = newH / origBB.h;
+          resizedEl.points = initial.points.map(([px, py]) => [
+            newX + (px - origBB.x) * scaleX,
+            newY + (py - origBB.y) * scaleY,
+          ]);
+        }
+      } else {
+        let newX = initial.x || 0;
+        let newY = initial.y || 0;
+        let newW = initial.w || 0;
+        let newH = initial.h || 0;
+        const h = pr.handle;
+
+        if (h.includes('e')) newW = Math.max(10, (initial.w || 0) + dx);
+        if (h.includes('s')) newH = Math.max(10, (initial.h || 0) + dy);
+        if (h.includes('w')) {
+          const possibleW = (initial.w || 0) - dx;
+          if (possibleW > 10) { newX = (initial.x || 0) + dx; newW = possibleW; }
+        }
+        if (h.includes('n')) {
+          const possibleH = (initial.h || 0) - dy;
+          if (possibleH > 10) { newY = (initial.y || 0) + dy; newH = possibleH; }
+        }
+
+        resizedEl.x = newX;
+        resizedEl.y = newY;
+        resizedEl.w = newW;
+        resizedEl.h = newH;
+      }
+
+      const elements = activePage.elements.map(el => el.id === resizedEl.id ? resizedEl : el);
+      activePage.elements = elements;
+      dispatch({ type: 'SET_VIEWPORT', viewport: vp });
       return;
     }
 
@@ -996,7 +1151,7 @@ export default function DrawView() {
       const elements = [...activePage.elements.filter(e => e.id !== pr.currentEl.id), pr.currentEl];
       activePage.elements = elements;
     }
-  }, [vp, state.pages, state.activePageId, activePage, toWorld]);
+  }, [vp, state.pages, state.activePageId, activePage, toWorld, state.tool, state.selectedIds]);
 
   const handlePointerUp = useCallback((e) => {
     const pr = pointerRef.current;
@@ -1012,7 +1167,7 @@ export default function DrawView() {
       pointerRef.current.rubberBand = null;
     }
 
-    if (pr.mode === 'drag') {
+    if (pr.mode === 'drag' || pr.mode === 'resize') {
       const elements = [...activePage.elements];
       dispatch({ type: 'COMMIT_ELEMENTS', elements });
     }
@@ -1033,7 +1188,7 @@ export default function DrawView() {
       }
     }
 
-    pointerRef.current = { ...pointerRef.current, down: false, mode: null, currentEl: null, draggingEls: null };
+    pointerRef.current = { ...pointerRef.current, down: false, mode: null, currentEl: null, draggingEls: null, handle: null, initialEl: null };
   }, [activePage, state.tool]);
 
   // ── Double-click to edit text / label ────────────────────
@@ -1072,21 +1227,22 @@ export default function DrawView() {
   }, [state.pages]);
 
   // ── Commit text from overlay ─────────────────────────────
-  const commitText = useCallback((text) => {
-    if (!editingTextEl) return;
-    const existing = activePage.elements.find(el => el.id === editingTextEl.id);
-    if (!text.trim()) {
+  const commitText = useCallback((elToCommit, text) => {
+    if (!elToCommit) return;
+    const trimmed = text.trim();
+    const existing = activePage.elements.find(el => el.id === elToCommit.id);
+    if (!trimmed) {
       if (existing) {
-        const elements = activePage.elements.filter(el => el.id !== editingTextEl.id);
+        const elements = activePage.elements.filter(el => el.id !== elToCommit.id);
         dispatch({ type: 'COMMIT_ELEMENTS', elements });
       }
     } else {
       const lines = text.split('\n');
       const maxLen = Math.max(...lines.map(l => l.length), 1);
-      const fontPx = editingTextEl.style?.fontSize || 14;
+      const fontPx = elToCommit.style?.fontSize || 14;
       const w = Math.max(60, maxLen * (fontPx * 0.65));
       const h = Math.max(24, lines.length * (fontPx * 1.4));
-      const updated = { ...editingTextEl, text, w, h };
+      const updated = { ...elToCommit, text, w, h };
       const elements = existing
         ? activePage.elements.map(el => el.id === updated.id ? updated : el)
         : [...activePage.elements, updated];
@@ -1094,15 +1250,19 @@ export default function DrawView() {
       dispatch({ type: 'SET_TOOL', tool: 'select' });
     }
     setEditingTextEl(null);
-  }, [editingTextEl, activePage]);
+  }, [activePage]);
 
   const zoomPercent = Math.round(vp.scale * 100);
 
   const getCursor = () => {
     const pr = pointerRef.current;
     if (pr.mode === 'pan') return 'grabbing';
+    if (pr.mode === 'resize' && pr.handle) {
+      const handleObj = getHandles(pr.initialEl || {}).find(h => h.id === pr.handle);
+      if (handleObj) return handleObj.cursor;
+    }
     switch (state.tool) {
-      case 'select': return 'default';
+      case 'select': return hoverCursor;
       case 'text': return 'text';
       case 'eraser': return 'crosshair';
       default: return 'crosshair';
