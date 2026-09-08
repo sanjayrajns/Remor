@@ -30,7 +30,7 @@ const getAuthBaseUrl = () => {
   if (process.env.BETTER_AUTH_URL && !process.env.BETTER_AUTH_URL.includes('localhost')) {
     return process.env.BETTER_AUTH_URL;
   }
-  if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+  if (process.env.VERCEL || process.en=v.NODE_ENV === 'production') {
     return 'https://remor.vercel.app';
   }
   return 'http://localhost:3001';

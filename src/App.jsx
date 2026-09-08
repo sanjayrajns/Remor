@@ -20,6 +20,7 @@ import RecentlyViewedView from './views/RecentlyViewed';
 import AllItemsView from './views/AllItems';
 import CollectionsView from './views/Collections';
 import AIInsightsView from './views/AIInsights';
+import DrawView from './views/DrawView';
 
 import MobileCreateView from './views/MobileCreate';
 
@@ -83,6 +84,7 @@ function ProductWorkspace() {
     else if (path.includes('/app/recent')) setActiveView('recent');
     else if (path.includes('/app/all')) setActiveView('all');
     else if (path.includes('/app/insights')) setActiveView('insights');
+    else if (path.includes('/app/draw')) setActiveView('draw');
     else if (path.includes('/app/create')) setActiveView('create');
     else if (path.includes('/app/collection/')) {
       const colId = path.split('/app/collection/')[1];
@@ -155,6 +157,7 @@ function ProductWorkspace() {
       case 'recent': return 'Recently Viewed';
       case 'all': return 'All Items';
       case 'insights': return 'AI Insights';
+      case 'draw': return 'Draw';
       case 'create': return 'Create Asset';
       default: return 'Workspace';
     }
@@ -173,6 +176,7 @@ function ProductWorkspace() {
       case 'recent':  return <RecentlyViewedView onOpenQuickCapture={handleCaptureClick} />;
       case 'all':     return <AllItemsView onOpenQuickCapture={handleCaptureClick} />;
       case 'insights': return <AIInsightsView />;
+      case 'draw':     return <DrawView />;
       case 'create':   return <MobileCreateView />;
       default:        return <InboxView onOpenQuickCapture={handleCaptureClick} />;
     }

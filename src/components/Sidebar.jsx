@@ -14,7 +14,8 @@ import {
   Brain,
   Folder,
   BookOpen,
-  X
+  X,
+  PenTool,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import TagBadge from './TagBadge';
@@ -62,6 +63,7 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
     { id: 'recent', label: 'Recently Viewed', icon: Clock },
     { id: 'all', label: 'All Items', icon: Layers, count: items.filter(i => i.status !== 'archived').length },
     { id: 'insights', label: 'AI Insights', icon: Brain, badge: 'AI' },
+    { id: 'draw', label: 'Draw', icon: PenTool },
   ];
 
   return (
