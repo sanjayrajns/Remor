@@ -14,9 +14,11 @@ import {
   BookOpen,
   X,
   PenTool,
+  LogOut,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import TagBadge from './TagBadge';
+import { signOut } from '../lib/auth-client';
 
 export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOpenHowToUse, isMobileOpen, onCloseMobile }) {
   const navigate = useNavigate();
@@ -288,49 +290,117 @@ export default function Sidebar({ onOpenQuickCapture, onOpenCommandPalette, onOp
         )}
       </div>
 
-      {/* Footer shortcut helper & How to Use Guide button */}
-      {!sidebarCollapsed && (
-        <div style={{ borderTop: '1px solid var(--border)', background: 'var(--surface)' }}>
-          <button
-            onClick={onOpenHowToUse}
-            style={{
-              width: '100%',
-              padding: '10px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              background: 'var(--primary-subtle)',
-              border: 'none',
-              borderBottom: '1px solid var(--border)',
-              color: 'var(--primary)',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              textAlign: 'left',
-              transition: 'background 0.15s ease',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <BookOpen size={14} />
-              <span>How to Use Guide</span>
-            </div>
-            <span className="font-mono text-xs" style={{ background: '#FFFFFF', border: '1px solid #BFDBFE', padding: '1px 5px', fontSize: '10px' }}>
-              GUIDE
-            </span>
-          </button>
-
-          <div style={{ padding: '12px 16px', fontSize: '11px', color: 'var(--text-muted)' }} className="font-mono">
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span>Search / Command:</span>
-              <kbd>Ctrl+P</kbd>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Quick Capture:</span>
-              <kbd>Ctrl+K</kbd>
-            </div>
+      {/* Footer: How to Use Guide, shortcuts & Logout */}
+      <div style={{ borderTop: '1px solid var(--border)', background: 'var(--surface)', flexShrink: 0 }}>
+        {sidebarCollapsed ? (
+          /* Collapsed: icon-only logout button */
+          <div style={{ padding: '10px 8px', display: 'flex', justifyContent: 'center' }}>
+            <button
+              id="sidebar-logout-btn-collapsed"
+              className="btn-icon"
+              onClick={async () => {
+                await signOut();
+                navigate('/login');
+              }}
+              title="Sign Out"
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                color: 'var(--text-muted)',
+                transition: 'background 0.15s ease, color 0.15s ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(239,68,68,0.1)';
+                e.currentTarget.style.color = '#ef4444';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.color = 'var(--text-muted)';
+              }}
+            >
+              <LogOut size={16} />
+            </button>
           </div>
-        </div>
-      )}
+        ) : (
+          /* Expanded: full footer */
+          <>
+            <button
+              onClick={onOpenHowToUse}
+              style={{
+                width: '100%',
+                padding: '10px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: 'var(--primary-subtle)',
+                border: 'none',
+                borderBottom: '1px solid var(--border)',
+                color: 'var(--primary)',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'background 0.15s ease',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BookOpen size={14} />
+                <span>How to Use Guide</span>
+              </div>
+              <span className="font-mono text-xs" style={{ background: '#FFFFFF', border: '1px solid #BFDBFE', padding: '1px 5px', fontSize: '10px' }}>
+                GUIDE
+              </span>
+            </button>
+
+            <div style={{ padding: '12px 16px', fontSize: '11px', color: 'var(--text-muted)' }} className="font-mono">
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span>Search / Command:</span>
+                <kbd>Ctrl+P</kbd>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Quick Capture:</span>
+                <kbd>Ctrl+K</kbd>
+              </div>
+            </div>
+
+            <button
+              id="sidebar-logout-btn"
+              onClick={async () => {
+                await signOut();
+                navigate('/login');
+              }}
+              style={{
+                width: '100%',
+                padding: '10px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'transparent',
+                border: 'none',
+                borderTop: '1px solid var(--border)',
+                color: 'var(--text-muted)',
+                fontSize: '12px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'background 0.15s ease, color 0.15s ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(239,68,68,0.06)';
+                e.currentTarget.style.color = '#ef4444';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.color = 'var(--text-muted)';
+              }}
+            >
+              <LogOut size={14} />
+              <span>Sign Out</span>
+            </button>
+          </>
+        )}
+      </div>
     </aside>
   );
 }
